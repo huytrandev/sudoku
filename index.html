@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku - JS</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <script src="sudoku.js"></script>
+</head>
+<body>
+    <div id="header">
+        <h1>SudokuNomi</h1>
+    </div>
+    <div id="options-wrap">
+        <div>
+            <label for="opt-showhints">
+                <input id="opt-showhints" type="checkbox"/>
+                Show Hints
+            </label>
+        </div>
+    </div>
+    <div id="game">
+        <table id="grid">
+            <tr>
+                <td><input id="intTextBox cell-0" type="number" min="1" max="9"></td>
+                <td><input id="intTextBox cell-1" type="number" min="1" max="9"></td>
+                <td><input id="intTextBox cell-2" type="number" min="1" max="9"></td>
+
+                <td><input id="intTextBox cell-3" type="number" min="1" max="9"></td>
+                <td><input id="intTextBox cell-4" type="number" min="1" max="9"></td>
+                <td><input id="intTextBox cell-5" type="number" min="1" max="9"></td>
+
+                <td><input id="intTextBox cell-6" type="number" min="1" max="9"></td>
+                <td><input id="intTextBox cell-7" type="number" min="1" max="9"></td>
+                <td><input id="intTextBox cell-8" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-9" type="number" min="1" max="9"></td>
+                <td><input id="cell-10" type="number" min="1" max="9"></td>
+                <td><input id="cell-11" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-12" type="number" min="1" max="9"></td>
+                <td><input id="cell-13" type="number" min="1" max="9"></td>
+                <td><input id="cell-14" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-15" type="number" min="1" max="9"></td>
+                <td><input id="cell-16" type="number" min="1" max="9"></td>
+                <td><input id="cell-17" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-18" type="number" min="1" max="9"></td>
+                <td><input id="cell-19" type="number" min="1" max="9"></td>
+                <td><input id="cell-20" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-21" type="number" min="1" max="9"></td>
+                <td><input id="cell-22" type="number" min="1" max="9"></td>
+                <td><input id="cell-23" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-24" type="number" min="1" max="9"></td>
+                <td><input id="cell-25" type="number" min="1" max="9"></td>
+                <td><input id="cell-26" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-27" type="number" min="1" max="9"></td>
+                <td><input id="cell-28" type="number" min="1" max="9"></td>
+                <td><input id="cell-29" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-30" type="number" min="1" max="9"></td>
+                <td><input id="cell-31" type="number" min="1" max="9"></td>
+                <td><input id="cell-32" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-33" type="number" min="1" max="9"></td>
+                <td><input id="cell-34" type="number" min="1" max="9"></td>
+                <td><input id="cell-35" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-36" type="number" min="1" max="9"></td>
+                <td><input id="cell-37" type="number" min="1" max="9"></td>
+                <td><input id="cell-38" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-39" type="number" min="1" max="9"></td>
+                <td><input id="cell-40" type="number" min="1" max="9"></td>
+                <td><input id="cell-41" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-42" type="number" min="1" max="9"></td>
+                <td><input id="cell-43" type="number" min="1" max="9"></td>
+                <td><input id="cell-44" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-45" type="number" min="1" max="9"></td>
+                <td><input id="cell-46" type="number" min="1" max="9"></td>
+                <td><input id="cell-47" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-48" type="number" min="1" max="9"></td>
+                <td><input id="cell-49" type="number" min="1" max="9"></td>
+                <td><input id="cell-50" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-51" type="number" min="1" max="9"></td>
+                <td><input id="cell-52" type="number" min="1" max="9"></td>
+                <td><input id="cell-53" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-54" type="number" min="1" max="9"></td>
+                <td><input id="cell-55" type="number" min="1" max="9"></td>
+                <td><input id="cell-56" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-57" type="number" min="1" max="9"></td>
+                <td><input id="cell-58" type="number" min="1" max="9"></td>
+                <td><input id="cell-59" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-60" type="number" min="1" max="9"></td>
+                <td><input id="cell-61" type="number" min="1" max="9"></td>
+                <td><input id="cell-62" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-63" type="number" min="1" max="9"></td>
+                <td><input id="cell-64" type="number" min="1" max="9"></td>
+                <td><input id="cell-65" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-66" type="number" min="1" max="9"></td>
+                <td><input id="cell-67" type="number" min="1" max="9"></td>
+                <td><input id="cell-68" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-69" type="number" min="1" max="9"></td>
+                <td><input id="cell-70" type="number" min="1" max="9"></td>
+                <td><input id="cell-71" type="number" min="1" max="9"></td>
+            </tr>
+
+            <tr>
+                <td><input id="cell-72" type="number" min="1" max="9"></td>
+                <td><input id="cell-73" type="number" min="1" max="9"></td>
+                <td><input id="cell-74" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-75" type="number" min="1" max="9"></td>
+                <td><input id="cell-76" type="number" min="1" max="9"></td>
+                <td><input id="cell-77" type="number" min="1" max="9"></td>
+
+                <td><input id="cell-78" type="number" min="1" max="9"></td>
+                <td><input id="cell-79" type="number" min="1" max="9"></td>
+                <td><input id="cell-80" type="number" min="1" max="9"></td>
+            </tr>
+        </table>
+    </div>
+    <div id="timer">
+        0:00:00
+    </div>
+    <div id="actions-wrap">
+        <button id="gen" onclick="generate();">New Game</button>
+        <button id="opt-printpuzzle" class="button">Print</button>
+    </div>
+    <div id="footer">
+        <p id="sc-info">Keyboard shortcuts: arrow keys, 0-9, enter</p>
+        <h3>How to play</h3>
+        <p>The object of the game is to complete the 9x9 grid so that each row, column, and 3x3 sub grid contain the digits 1-9 once only.</p>
+    </div>
+
+    <script>
+        setInputFilter(document.getElementById("intTextBox"), function(value) {
+            return /^-?\d*$/.test(value);
+        });
+    </script>
+</body>
+</html>
