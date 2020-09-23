@@ -1,39 +1,64 @@
 body {
-    background-color: #f1f1f1;
-}
-h1 {
-    font-family: cursive;
-    font-style: oblique;
-    position: relative;
-    top: -5px;
-    left: 350px;
-}
-#grid {
-    position: relative;
-    left: 400px;
-    top: 80px;
+    text-align: center;
 }
 
-table {
-    border: 2px solid #000000;
+#game {
+    padding: 10px;
 }
-td {
+
+table,tr,td {
+    margin:0;
+    padding:0;
+}
+
+td
+{
     border: 1px solid #000000;
     text-align: center;
-    vertical-align: middle;
+    vertical-align: middle;  
 }
-input {
+
+p {
+    max-width: 450px;
+    margin: 1em auto;
+}
+
+h1 {
+    margin-bottom: .2em;
+}
+
+input[type=number]
+{
     color: #000000;
     padding: 0;
     border: 0;
     text-align: center;
-    width: 60px;
-    height: 60px;
-    font-size: 24px;
-    background-color: #ffffff;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    background-color: #FFFFFF;
     outline: none;
-    font-family: cursive;
-    font-weight: 800;
+	font-family: Arial, Helvetica, sans-serif;
+    font-weight: bolder;
+    cursor: pointer;  
+}
+
+input[type=number]:hover {
+    background-color: #eee;
+}
+
+input[type=number]:disabled {
+    cursor: default;
+}
+
+input[type=number]:disabled:hover {
+    background-color: #FFFFFF;
+}
+
+#game table {
+    background: #FFF;
+    margin: 0 auto;
+    box-shadow: 0 0 8px #666;
 }
 
 #cell-0,  #cell-1,  #cell-2  { border-top:    2px solid #000000; }

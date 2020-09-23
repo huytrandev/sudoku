@@ -1,6 +1,11 @@
 var reset = "";
+var totalSeconds = 0;
+var timer = null;
 
 function generate() {
+    stop();
+    document.getElementById("seconds").innerHTML = "0";
+
     var result = "";
     var templates = [
         "004300209005009001070060043006002087190007400050083000600000105003508690042910300",
@@ -26,14 +31,15 @@ function generate() {
     ];
     var matrix = templates[Math.floor(Math.random() * templates.length)];
     reset = matrix;
-    console.log(templates.length);
+    // console.log(templates.length);
     for (var i = 0; i < 81; i++) {
         if (matrix[i] == 0)
-            result = "";
+            result = null;
         else
             result = matrix[i];
         document.getElementById("cell-" + i).value = result;
     }
+    
     for (var i = 0; i < 81; i++) {
         var disable = document.getElementById("cell-" + i).value;
         if (disable != "")
@@ -43,20 +49,88 @@ function generate() {
     }
 }
 
-// Restricts input for the given textbox to the given inputFilter.
-function setInputFilter(textbox, inputFilter) {
-    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
-        textbox.addEventListener(event, function() {
-            if (inputFilter(this.value)) {
-                this.oldValue = this.value;
-                this.oldSelectionStart = this.selectionStart;
-                this.oldSelectionEnd = this.selectionEnd;
-            } else if (this.hasOwnProperty("oldValue")) {
-                this.value = this.oldValue;
-                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-            } else {
-                this.value = "";
+function test() {
+    var matrix = [];
+    var arr = [];
+    var col = 0;
+
+    for (var i = 0; i < 81; i++) {
+        var result = document.getElementById("cell-" + i).value;
+
+        if (result == "") {
+            result = 0;
+        } else {
+            result = parseInt(result);
+        }
+
+        if (col < 9) {
+            pushArray(arr, result);
+            col++;
+        } else {
+            matrix.push(arr);
+            col = 0;
+            arr = [];
+            pushArray(arr, result);
+            col++;
+        }
+
+        if (i == 80) {
+            matrix.push(arr);
+        }
+    }
+
+    function pushArray(array, value) {
+        array.push(value);
+    }
+
+    function isValidRow(matrix) { 
+        for (var i = 0; i < matrix.length; i++) {
+            var indexArr = [0,0,0,0,0,0,0,0,0];
+            for (var j = 0; j < matrix.length; j++) {
+                if(matrix[i][j] != 0) {
+                    indexArr[matrix[i][j] - 1]++;
+                    if(indexArr[matrix[i][j] - 1] > 1) {
+                        return false;
+                    }
+                }
             }
-        });
-    });
+        }
+        return true;
+    }
+
+    function isValidCol(matrix) { 
+        for (var i = 0; i < matrix.length; i++) {
+            var indexArr = [0,0,0,0,0,0,0,0,0];
+            for (var j = 0; j < matrix.length; j++) {
+                if(matrix[j][i] != 0) {
+                    indexArr[matrix[j][i] - 1]++;
+                    if(indexArr[matrix[j][i] - 1] > 1) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    console.log(isValidRow(matrix));
+    console.log(isValidCol(matrix));
+}
+
+function timeStart() {
+    var secondsLabel = document.getElementById("seconds");
+
+    if(!timer) {
+        timer = setInterval(setTime, 1000);
+    }
+
+    function setTime() {
+        totalSeconds++;
+        secondsLabel.innerHTML = totalSeconds;
+    }
+}
+
+function stop() {
+    clearInterval(timer);
+    document.getElementById("time_msg").innerHTML = "You took about " + (totalSeconds / 60).toFixed(2) + " minutes";
 }

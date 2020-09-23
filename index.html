@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku - JS</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
+    <link rel="stylesheet" href="style.css">
     <script src="sudoku.js"></script>
 </head>
-<body>
+<body onload="generate();">
     <div id="header">
-        <h1>SudokuNomi</h1>
+        <h1>Sudoku Puzzle</h1>
     </div>
     <div id="options-wrap">
         <div>
@@ -21,21 +21,21 @@
     </div>
     <div id="game">
         <table id="grid">
-            <tr>
-                <td><input id="intTextBox cell-0" type="number" min="1" max="9"></td>
-                <td><input id="intTextBox cell-1" type="number" min="1" max="9"></td>
-                <td><input id="intTextBox cell-2" type="number" min="1" max="9"></td>
+            <tr id="cell">
+                <td><input id="cell-0" type="number" min="1" max="9"></td>
+                <td><input id="cell-1" type="number" min="1" max="9"></td>
+                <td><input id="cell-2" type="number" min="1" max="9"></td>
 
-                <td><input id="intTextBox cell-3" type="number" min="1" max="9"></td>
-                <td><input id="intTextBox cell-4" type="number" min="1" max="9"></td>
-                <td><input id="intTextBox cell-5" type="number" min="1" max="9"></td>
+                <td><input id="cell-3" type="number" min="1" max="9"></td>
+                <td><input id="cell-4" type="number" min="1" max="9"></td>
+                <td><input id="cell-5" type="number" min="1" max="9"></td>
 
-                <td><input id="intTextBox cell-6" type="number" min="1" max="9"></td>
-                <td><input id="intTextBox cell-7" type="number" min="1" max="9"></td>
-                <td><input id="intTextBox cell-8" type="number" min="1" max="9"></td>
+                <td><input id="cell-6" type="number" min="1" max="9"></td>
+                <td><input id="cell-7" type="number" min="1" max="9"></td>
+                <td><input id="cell-8" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-9" type="number" min="1" max="9"></td>
                 <td><input id="cell-10" type="number" min="1" max="9"></td>
                 <td><input id="cell-11" type="number" min="1" max="9"></td>
@@ -49,7 +49,7 @@
                 <td><input id="cell-17" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-18" type="number" min="1" max="9"></td>
                 <td><input id="cell-19" type="number" min="1" max="9"></td>
                 <td><input id="cell-20" type="number" min="1" max="9"></td>
@@ -63,7 +63,7 @@
                 <td><input id="cell-26" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-27" type="number" min="1" max="9"></td>
                 <td><input id="cell-28" type="number" min="1" max="9"></td>
                 <td><input id="cell-29" type="number" min="1" max="9"></td>
@@ -77,7 +77,7 @@
                 <td><input id="cell-35" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-36" type="number" min="1" max="9"></td>
                 <td><input id="cell-37" type="number" min="1" max="9"></td>
                 <td><input id="cell-38" type="number" min="1" max="9"></td>
@@ -91,7 +91,7 @@
                 <td><input id="cell-44" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-45" type="number" min="1" max="9"></td>
                 <td><input id="cell-46" type="number" min="1" max="9"></td>
                 <td><input id="cell-47" type="number" min="1" max="9"></td>
@@ -105,7 +105,7 @@
                 <td><input id="cell-53" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-54" type="number" min="1" max="9"></td>
                 <td><input id="cell-55" type="number" min="1" max="9"></td>
                 <td><input id="cell-56" type="number" min="1" max="9"></td>
@@ -119,7 +119,7 @@
                 <td><input id="cell-62" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-63" type="number" min="1" max="9"></td>
                 <td><input id="cell-64" type="number" min="1" max="9"></td>
                 <td><input id="cell-65" type="number" min="1" max="9"></td>
@@ -133,7 +133,7 @@
                 <td><input id="cell-71" type="number" min="1" max="9"></td>
             </tr>
 
-            <tr>
+            <tr id="cell">
                 <td><input id="cell-72" type="number" min="1" max="9"></td>
                 <td><input id="cell-73" type="number" min="1" max="9"></td>
                 <td><input id="cell-74" type="number" min="1" max="9"></td>
@@ -148,23 +148,24 @@
             </tr>
         </table>
     </div>
-    <div id="timer">
-        0:00:00
+    <div>
+        <p id="time">
+            <label id="seconds">0</label> s
+        </p>
     </div>
     <div id="actions-wrap">
         <button id="gen" onclick="generate();">New Game</button>
         <button id="opt-printpuzzle" class="button">Print</button>
+        <button id="start" onclick="timeStart()">Start Game</button>
+        <button id="start" onclick="stop(); test();">Score</button>
+    </div>
+    <div class="">
+        <p id="time_msg"></p>
     </div>
     <div id="footer">
         <p id="sc-info">Keyboard shortcuts: arrow keys, 0-9, enter</p>
         <h3>How to play</h3>
         <p>The object of the game is to complete the 9x9 grid so that each row, column, and 3x3 sub grid contain the digits 1-9 once only.</p>
     </div>
-
-    <script>
-        setInputFilter(document.getElementById("intTextBox"), function(value) {
-            return /^-?\d*$/.test(value);
-        });
-    </script>
 </body>
 </html>
