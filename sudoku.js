@@ -31,7 +31,6 @@ function generate() {
     ];
     var matrix = templates[Math.floor(Math.random() * templates.length)];
     reset = matrix;
-    // console.log(templates.length);
     for (var i = 0; i < 81; i++) {
         if (matrix[i] == 0)
             result = null;
@@ -85,11 +84,11 @@ function test() {
 
     function isValidRow(matrix) { 
         for (var i = 0; i < matrix.length; i++) {
-            var indexArr = [0,0,0,0,0,0,0,0,0];
+            var count = [0,0,0,0,0,0,0,0,0];
             for (var j = 0; j < matrix.length; j++) {
                 if(matrix[i][j] != 0) {
-                    indexArr[matrix[i][j] - 1]++;
-                    if(indexArr[matrix[i][j] - 1] > 1) {
+                    count[matrix[i][j] - 1]++;
+                    if(count[matrix[i][j] - 1] > 1) {
                         return false;
                     }
                 }
@@ -100,11 +99,11 @@ function test() {
 
     function isValidCol(matrix) { 
         for (var i = 0; i < matrix.length; i++) {
-            var indexArr = [0,0,0,0,0,0,0,0,0];
+            var count = [0,0,0,0,0,0,0,0,0];
             for (var j = 0; j < matrix.length; j++) {
                 if(matrix[j][i] != 0) {
-                    indexArr[matrix[j][i] - 1]++;
-                    if(indexArr[matrix[j][i] - 1] > 1) {
+                    count[matrix[j][i] - 1]++;
+                    if(count[matrix[j][i] - 1] > 1) {
                         return false;
                     }
                 }
@@ -113,8 +112,24 @@ function test() {
         return true;
     }
 
-    console.log(isValidRow(matrix));
-    console.log(isValidCol(matrix));
+    function isValidMatrixChild(matrix) {
+        for (var startRow = 0; startRow < matrix.length; startRow += 3) {
+            for (var startCol = 0; startCol < matrix.length; startCol += 3) {
+                // debugger;
+                var count = [0,0,0,0,0,0,0,0,0];
+                for (var row = startRow; row < startRow + 3; row++) {
+                    for (var col = startCol; col < startCol + 3; col++) {
+                        count[matrix[row][col] - 1]++;
+                        if ((count[matrix[row][col] - 1]) > 1) {
+                            return false;
+                        }
+                    }
+                }
+                
+            }
+        }
+        return true;
+    }
 }
 
 function timeStart() {
