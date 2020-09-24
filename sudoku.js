@@ -1,11 +1,12 @@
 var reset = "";
 var totalSeconds = 0;
 var timer = null;
+var matrix = [];
 
 function generate() {
-    stop();
-    document.getElementById("seconds").innerHTML = "0";
-
+    matrix = [];
+    var arr = [];
+    var col = 0;
     var result = "";
     var templates = [
         "004300209005009001070060043006002087190007400050083000600000105003508690042910300",
@@ -29,38 +30,21 @@ function generate() {
         "270600050000070406006059030040005600081000040029006173390000002000097800807140005",
         "206597403080103000507000009000004210028006500409010060700305000001200000300480902",
     ];
-    var matrix = templates[Math.floor(Math.random() * templates.length)];
+    var matrixTemp = templates[Math.floor(Math.random() * templates.length)];
+
     reset = matrix;
     for (var i = 0; i < 81; i++) {
-        if (matrix[i] == 0)
+        // Insert value to display
+        if (matrixTemp[i] == "0")
             result = null;
         else
-            result = matrix[i];
+            result = parseInt(matrixTemp[i]);
+
         document.getElementById("cell-" + i).value = result;
-    }
-    
-    for (var i = 0; i < 81; i++) {
-        var disable = document.getElementById("cell-" + i).value;
-        if (disable != "")
-            document.getElementById("cell-" + i).disabled = true;
-        else
-            document.getElementById("cell-" + i).disabled = false;
-    }
-}
 
-function test() {
-    var matrix = [];
-    var arr = [];
-    var col = 0;
-
-    for (var i = 0; i < 81; i++) {
-        var result = document.getElementById("cell-" + i).value;
-
-        if (result == "") {
+        // Push value into matrix
+        if (result == null)
             result = 0;
-        } else {
-            result = parseInt(result);
-        }
 
         if (col < 9) {
             pushArray(arr, result);
@@ -82,60 +66,147 @@ function test() {
         array.push(value);
     }
 
-    function isValidRow(matrix) { 
-        for (var i = 0; i < matrix.length; i++) {
-            var count = [0,0,0,0,0,0,0,0,0];
-            for (var j = 0; j < matrix.length; j++) {
-                if(matrix[i][j] != 0) {
-                    count[matrix[i][j] - 1]++;
-                    if(count[matrix[i][j] - 1] > 1) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
+    // Disable null value Cell in Sudoku Board
+    for (var i = 0; i < 81; i++) {
+        var disable = document.getElementById("cell-" + i).value;
+        if (disable != "")
+            document.getElementById("cell-" + i).disabled = true;
+        else
+            document.getElementById("cell-" + i).disabled = false;
     }
 
-    function isValidCol(matrix) { 
-        for (var i = 0; i < matrix.length; i++) {
-            var count = [0,0,0,0,0,0,0,0,0];
-            for (var j = 0; j < matrix.length; j++) {
-                if(matrix[j][i] != 0) {
-                    count[matrix[j][i] - 1]++;
-                    if(count[matrix[j][i] - 1] > 1) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
+    stop();
+    document.getElementById("seconds").innerHTML = "0";
+}
 
-    function isValidMatrixChild(matrix) {
-        for (var startRow = 0; startRow < matrix.length; startRow += 3) {
-            for (var startCol = 0; startCol < matrix.length; startCol += 3) {
-                // debugger;
-                var count = [0,0,0,0,0,0,0,0,0];
-                for (var row = startRow; row < startRow + 3; row++) {
-                    for (var col = startCol; col < startCol + 3; col++) {
-                        count[matrix[row][col] - 1]++;
-                        if ((count[matrix[row][col] - 1]) > 1) {
-                            return false;
-                        }
-                    }
-                }
-                
+// Check rows in Sudoku Board
+// function isValidRow(matrix) {
+//     for (var i = 0; i < matrix.length; i++) {
+//         var count = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+//         for (var j = 0; j < matrix.length; j++) {
+//             if (matrix[i][j] != 0) {
+//                 count[matrix[i][j] - 1]++;
+//                 if (count[matrix[i][j] - 1] > 1) {
+//                     return false;
+//                 }
+//             }
+//         }
+//     }
+//     return true;
+// }
+
+// // Check columns in Sudoku Board
+// function isValidCol(matrix) {
+//     for (var i = 0; i < matrix.length; i++) {
+//         var count = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+//         for (var j = 0; j < matrix.length; j++) {
+//             if (matrix[j][i] != 0) {
+//                 count[matrix[j][i] - 1]++;
+//                 if (count[matrix[j][i] - 1] > 1) {
+//                     return false;
+//                 }
+//             }
+//         }
+//     }
+//     return true;
+// }
+
+// // Check 3x3 matrix in Sudoku Boards
+// function isValidMatrixChild(matrix) {
+//     for (var startRow = 0; startRow < matrix.length; startRow += 3) {
+//         for (var startCol = 0; startCol < matrix.length; startCol += 3) {
+//             var count = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+//             for (var row = startRow; row < startRow + 3; row++) {
+//                 for (var col = startCol; col < startCol + 3; col++) {
+//                     count[matrix[row][col] - 1]++;
+//                     if ((count[matrix[row][col] - 1]) > 1) {
+//                         return false;
+//                     }
+//                 }
+//             }
+
+//         }
+//     }
+//     return true;
+// }
+
+// Is the Sudoku Board solved?
+function isSolved(matrix) {
+    for (var r = 0; r < matrix.length; r++) {
+        for (var c = 0; c < matrix.length; c++) {
+            if (matrix[r][c] == 0) {
+                return false;
             }
         }
-        return true;
+    }
+    return true;
+}
+
+function solve(matrix) {
+    if (isSolved(matrix)) {
+        return matrix;
+    } else {
+        const possibilites = nextMatrix(matrix);
+        const validMatrix = keepOnlyValid(possibilites);
+        return searchForSolution(validMatrix);
     }
 }
 
+function searchForSolution(matrix) {
+    if (matrix.length < 1) {
+        return false;
+    } else {
+        var fisrt = matrix.shift();
+        const tryPath = solve(fisrt);
+        if (tryPath != false) {
+            return tryPath;
+        } else {
+            return searchForSolution(matrix);
+        }
+    }
+}
+
+function nextMatrix(matrix) {
+    var res = [];
+    const firstEmpty = findEmptyCell(matrix);
+    if (firstEmpty != 0) {
+        const y = firstEmpty[0];
+        const x = firstEmpty[1];
+        for (var i = 1; i <= 9; i++) {
+            var newMatrix = [...matrix];
+            var row = [...newMatrix[y]];
+            row[x] = i;
+            newMatrix[y] = row;
+            res.push(newMatrix);
+        }
+    }
+    return res;
+}
+
+function findEmptyCell(matrix) {
+    // matrix -> [int, int]
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            if (matrix[i][j] == 0) {
+                return [i, j];
+            }
+        }
+    }
+}
+
+function keepOnlyValid(matrixes) {
+    return matrixes.filter(m => validMatrix(m));
+}
+
+function validMatrix(matrix) {
+    return validCols(matrix) && validRows(matrix) && validChildMatrix(matrix);
+}
+
+// Start the time record
 function timeStart() {
     var secondsLabel = document.getElementById("seconds");
 
-    if(!timer) {
+    if (!timer) {
         timer = setInterval(setTime, 1000);
     }
 
@@ -145,6 +216,64 @@ function timeStart() {
     }
 }
 
+function validRows(matrix) {
+    for (var i = 0; i < 9; i++) {
+        var current = [];
+        for (var j = 0; j < 9; j++) {
+            if (current.includes(matrix[i][j])) {
+                return false;
+            } else if (matrix[i][j] != 0) {
+                current.push(matrix[i][j]);
+            }
+        }
+    }
+    return true;
+}
+
+function validCols(matrix) {
+    for (var i = 0; i < 9; i++) {
+        var current = [];
+        for (var j = 0; j < 9; j++) {
+            if (current.includes(matrix[j][i])) {
+                return false;
+            } else if (matrix[j][i] != 0) {
+                current.push(matrix[j][i]);
+            }
+        }
+    }
+    return true;
+}
+
+function validChildMatrix(matrix) {
+    const childMatrixCoordinates = [
+        [0, 0], [0, 1], [0, 2],
+        [1, 0], [1, 1], [1, 2],
+        [2, 0], [2, 1], [2, 2]
+    ];
+
+    for (var y = 0; y < 9; y += 3) {
+        for (var x = 0; x < 9; x += 3) {
+            var current = [];
+            for (var i = 0; i < 9; i++) {
+                var coordinates = [...childMatrixCoordinates[i]];
+                coordinates[0] += y;
+                coordinates[1] += x;
+                if (current.includes(matrix[coordinates[0]][coordinates[1]])) {
+                    return false;
+                } else if (matrix[coordinates[0]][coordinates[1]] != 0) {
+                    current.push(matrix[coordinates[0]][coordinates[1]]);
+                }
+            }
+        }
+    }
+    return true;
+}
+
+function printSolvedMatrix() {
+    console.log(solve(matrix));
+}
+
+// Stop game
 function stop() {
     clearInterval(timer);
     document.getElementById("time_msg").innerHTML = "You took about " + (totalSeconds / 60).toFixed(2) + " minutes";
