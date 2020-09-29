@@ -62,10 +62,6 @@ function generate() {
         }
     }
 
-    function pushArray(array, value) {
-        array.push(value);
-    }
-
     // Disable null value Cell in Sudoku Board
     for (var i = 0; i < 81; i++) {
         var disable = document.getElementById("cell-" + i).value;
@@ -75,66 +71,22 @@ function generate() {
             document.getElementById("cell-" + i).disabled = false;
     }
 
+    // Set time to default
     stop();
     document.getElementById("seconds").innerHTML = "0";
+    totalSeconds = 0;
+    timer = null;
 }
 
-// Check rows in Sudoku Board
-// function isValidRow(matrix) {
-//     for (var i = 0; i < matrix.length; i++) {
-//         var count = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-//         for (var j = 0; j < matrix.length; j++) {
-//             if (matrix[i][j] != 0) {
-//                 count[matrix[i][j] - 1]++;
-//                 if (count[matrix[i][j] - 1] > 1) {
-//                     return false;
-//                 }
-//             }
-//         }
-//     }
-//     return true;
-// }
-
-// // Check columns in Sudoku Board
-// function isValidCol(matrix) {
-//     for (var i = 0; i < matrix.length; i++) {
-//         var count = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-//         for (var j = 0; j < matrix.length; j++) {
-//             if (matrix[j][i] != 0) {
-//                 count[matrix[j][i] - 1]++;
-//                 if (count[matrix[j][i] - 1] > 1) {
-//                     return false;
-//                 }
-//             }
-//         }
-//     }
-//     return true;
-// }
-
-// // Check 3x3 matrix in Sudoku Boards
-// function isValidMatrixChild(matrix) {
-//     for (var startRow = 0; startRow < matrix.length; startRow += 3) {
-//         for (var startCol = 0; startCol < matrix.length; startCol += 3) {
-//             var count = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-//             for (var row = startRow; row < startRow + 3; row++) {
-//                 for (var col = startCol; col < startCol + 3; col++) {
-//                     count[matrix[row][col] - 1]++;
-//                     if ((count[matrix[row][col] - 1]) > 1) {
-//                         return false;
-//                     }
-//                 }
-//             }
-
-//         }
-//     }
-//     return true;
-// }
+function pushArray(array, value) {
+    array.push(value);
+}
 
 // Is the Sudoku Board solved?
 function isSolved(matrix) {
-    for (var r = 0; r < matrix.length; r++) {
-        for (var c = 0; c < matrix.length; c++) {
-            if (matrix[r][c] == 0) {
+    for (var i = 0; i < matrix.length; i++) {
+        for (var j = 0; j < matrix.length; j++) {
+            if (matrix[i][j] == 0) {
                 return false;
             }
         }
@@ -146,7 +98,7 @@ function solve(matrix) {
     if (isSolved(matrix)) {
         return matrix;
     } else {
-        const possibilites = nextMatrix(matrix);
+        const possibilites = nextMatrixes(matrix);
         const validMatrix = keepOnlyValid(possibilites);
         return searchForSolution(validMatrix);
     }
@@ -166,7 +118,7 @@ function searchForSolution(matrix) {
     }
 }
 
-function nextMatrix(matrix) {
+function nextMatrixes(matrix) {
     var res = [];
     const firstEmpty = findEmptyCell(matrix);
     if (firstEmpty != 0) {
@@ -269,12 +221,103 @@ function validChildMatrix(matrix) {
     return true;
 }
 
-function printSolvedMatrix() {
-    console.log(solve(matrix));
+function fillAllSudoku() {
+    matrix = solve(matrix);
+    console.log(matrix);
+    var cell = 0;
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            document.getElementById("cell-" + cell).value = matrix[i][j];
+            cell++;
+        }
+    }
+}
+
+// function printMatrix() {
+//     const fs = require('fs');
+
+//     var filename = 'matrix.txt';
+//     var file = fs.createWriteStream('./output/' + filename);
+
+//     file.on('error', function (err) { /* error handling */ });
+//     arr.forEach(function (v) { file.write('[' + v.join(', ') + '],\n'); });
+//     file.end();
+// }
+
+function check() {
+    console.log(matrix);
+    var current = [];
+    var col = 0;
+    var arr = [];
+    var value = "";
+    for (var i = 0; i < 81; i++) {
+        if (document.getElementById("cell-" + i).value == "") {
+            value = "0";
+        } else {
+            value = document.getElementById("cell-" + i).value;
+        }
+
+        value = parseInt(value);
+
+        if (col < 9) {
+            pushArray(arr, value);
+            col++;
+        } else {
+            current.push(arr);
+            col = 0;
+            arr = [];
+            pushArray(arr, value);
+            col++;
+        }
+
+        if (i == 80) {
+            current.push(arr);
+        }
+    }
+
+    if (validMatrix(current)) {
+        document.getElementById("check_msg").innerHTML = "It's look good";
+    } else {
+        document.getElementById("check_msg").innerHTML = "You got something wrong :(";
+    }
+}
+
+function printValue(value) {
+    console.log(value);
+}
+
+// Download Sudoku matrix
+function download() {
+    var filename = 'sudoku.txt';
+    var element = document.createElement('a');
+
+    var file = "";
+
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            file += matrix[i][j] + " ";
+
+            if (j == 8) {
+                file += "\n";
+            }
+        }
+    }
+
+    element.style.display = 'none';
+
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(file));
+
+    element.setAttribute('download', filename);
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 }
 
 // Stop game
 function stop() {
     clearInterval(timer);
-    document.getElementById("time_msg").innerHTML = "You took about " + (totalSeconds / 60).toFixed(2) + " minutes";
+    document.getElementById("time_msg").innerHTML =
+    "You took about " + (totalSeconds / 60).toFixed(0) + " minutes " + (totalSeconds % 60) + " seconds";
 }
