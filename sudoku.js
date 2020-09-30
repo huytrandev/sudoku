@@ -30,17 +30,21 @@ function generate() {
         "270600050000070406006059030040005600081000040029006173390000002000097800807140005",
         "206597403080103000507000009000004210028006500409010060700305000001200000300480902",
     ];
-    var matrixTemp = templates[Math.floor(Math.random() * templates.length)];
+    var matrixTemplate = templates[Math.floor(Math.random() * templates.length)];
 
-    reset = matrix;
+    reset = matrixTemplate;
+
     for (var i = 0; i < 81; i++) {
         // Insert value to display
-        if (matrixTemp[i] == "0")
-            result = null;
-        else
-            result = parseInt(matrixTemp[i]);
+        if (matrixTemplate[i] == "0") result = null;
+        else result = parseInt(matrixTemplate[i]);
 
         document.getElementById("cell-" + i).value = result;
+
+        if (result != null) document.getElementById("cell-" + i).disabled = true;
+        else document.getElementById("cell-" + i).disabled = false;
+
+        document.getElementById("cell-" + i).style.color = "black";
 
         // Push value into matrix
         if (result == null)
@@ -60,15 +64,6 @@ function generate() {
         if (i == 80) {
             matrix.push(arr);
         }
-    }
-
-    // Disable null value Cell in Sudoku Board
-    for (var i = 0; i < 81; i++) {
-        var disable = document.getElementById("cell-" + i).value;
-        if (disable != "")
-            document.getElementById("cell-" + i).disabled = true;
-        else
-            document.getElementById("cell-" + i).disabled = false;
     }
 
     // Set time to default
@@ -222,40 +217,29 @@ function validChildMatrix(matrix) {
 }
 
 function fillAllSudoku() {
-    matrix = solve(matrix);
-    console.log(matrix);
+    var current = solve(matrix);
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
-            document.getElementById("cell-" + cell).value = matrix[i][j];
+            document.getElementById("cell-" + cell).value = current[i][j];
+            if (current[i][j] !== matrix[i][j]) {
+                document.getElementById("cell-" + cell).style.color = "red";
+            }
+            // document.getElementById("cell-" + cell).disabled = true;
             cell++;
         }
     }
+    matrix = current;
 }
 
-// function printMatrix() {
-//     const fs = require('fs');
-
-//     var filename = 'matrix.txt';
-//     var file = fs.createWriteStream('./output/' + filename);
-
-//     file.on('error', function (err) { /* error handling */ });
-//     arr.forEach(function (v) { file.write('[' + v.join(', ') + '],\n'); });
-//     file.end();
-// }
-
 function check() {
-    console.log(matrix);
     var current = [];
     var col = 0;
     var arr = [];
     var value = "";
     for (var i = 0; i < 81; i++) {
-        if (document.getElementById("cell-" + i).value == "") {
-            value = "0";
-        } else {
-            value = document.getElementById("cell-" + i).value;
-        }
+        if (document.getElementById("cell-" + i).value == "") value = "0";
+        else value = document.getElementById("cell-" + i).value;
 
         value = parseInt(value);
 
@@ -275,22 +259,14 @@ function check() {
         }
     }
 
-    if (validMatrix(current)) {
-        document.getElementById("check_msg").innerHTML = "It's look good";
-    } else {
-        document.getElementById("check_msg").innerHTML = "You got something wrong :(";
-    }
-}
-
-function printValue(value) {
-    console.log(value);
+    if (validMatrix(current)) document.getElementById("check_msg").innerHTML = "It's look good";
+    else document.getElementById("check_msg").innerHTML = "You got something wrong :(";
 }
 
 // Download Sudoku matrix
 function download() {
-    var filename = 'sudoku.txt';
-    var element = document.createElement('a');
-
+    var filename = "sudoku.txt";
+    var element = document.createElement("a");
     var file = "";
 
     for (var i = 0; i < 9; i++) {
@@ -303,16 +279,32 @@ function download() {
         }
     }
 
-    element.style.display = 'none';
+    element.style.display = "none";
 
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(file));
+    element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(file));
 
-    element.setAttribute('download', filename);
+    element.setAttribute("download", filename);
     document.body.appendChild(element);
 
     element.click();
 
     document.body.removeChild(element);
+}
+
+function reload() {
+    var value = "";
+    var disable = "";
+
+    for (var i = 0; i < 81; i++) {
+        if (reset[i] == "0") value = "";
+        else value = reset[i];
+
+        document.getElementById("cell-" + i).style.color = "black";
+        document.getElementById("cell-" + i).value = value;
+
+        if (disable != "") document.getElementById("cell-" + i).disabled = true;
+        else document.getElementById("cell-" + i).disabled = false;
+    }
 }
 
 // Stop game
