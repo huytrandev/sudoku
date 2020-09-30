@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="sudoku.js"></script>
 </head>
-<body onload="generate();">
+<body>
     <div id="header">
         <h1>Sudoku Puzzle</h1>
     </div>
@@ -156,17 +156,27 @@
     </div>
     <div id="actions-wrap">
         <button id="gen" onclick="generate();">New Game</button>
-        <button id="opt-printpuzzle" class="button">Print</button>
+        <button id="download" type="button">Download</button>
         <button id="start" onclick="timeStart()">Start Game</button>
-        <button id="start" onclick="stop(); test();">Score</button>
+        <button id="start" onclick="stop();">Score</button>
+        <button id="solve" onclick="fillAllSudoku();">Solve</button>
+        <button id="submit" onclick="">Submit</button>
+        <button id="check" onclick="check();">Check</button>
     </div>
     <div class="">
         <p id="time_msg"></p>
+        <p id="check_msg"></p>
     </div>
     <div id="footer">
         <p id="sc-info">Keyboard shortcuts: arrow keys, 0-9, enter</p>
         <h3>How to play</h3>
         <p>The object of the game is to complete the 9x9 grid so that each row, column, and 3x3 sub grid contain the digits 1-9 once only.</p>
     </div>
+    <!-- Script -->
+    <script>
+        document.getElementById("download").addEventListener("click", function() {
+            download();
+        }, false);
+    </script>
 </body>
 </html>
