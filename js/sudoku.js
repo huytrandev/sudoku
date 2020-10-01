@@ -2,27 +2,27 @@ var reset = "";
 var totalSeconds = 0;
 var timer = null;
 const defaultMatrix = [
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
 var matrix = [
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-    [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
 function generate() {
@@ -51,6 +51,7 @@ function generate() {
     // Random the templates above
     var matrixTemplate = templates[Math.floor(Math.random() * templates.length)];
 
+    debugger;
     // Save the original templates for reset the game puzzle
     reset = matrixTemplate;
 
@@ -73,30 +74,30 @@ function generate() {
         }
 
         // Set default color
-        
+
     }
 
     matrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
     // Insert value to matrix
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             var value = document.getElementById("cell-" + cell).value;
-            
+
             if (value != "" && value != NaN) {
                 matrix[i][j] = parseInt(value);
             }
-            
+
             cell++;
         }
     }
@@ -107,7 +108,7 @@ function generate() {
     totalSeconds = 0;
     timer = null;
 
-    console.log(matrix);
+    timeStart();
 }
 
 function pushArray(array, value) {
@@ -259,15 +260,15 @@ function validChildMatrix(matrix) {
 // Get current the Sudoku in the screen
 function getCurrentSudoku() {
     var current = [
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
     var cell = 0;
@@ -288,23 +289,25 @@ function fillAllSudoku() {
     var current = getCurrentSudoku();
     // debugger;
     var cell = 0;
-    current = solve(current);
+    var currentSolved = solve(current);
 
-    if (current != false) {
+    if (currentSolved != false) {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
-                document.getElementById("cell-" + cell).value = current[i][j];
-                if (current[i][j] !== matrix[i][j]) {
+                document.getElementById("cell-" + cell).value = currentSolved[i][j];
+                if (current[i][j] !== currentSolved[i][j]) {
                     document.getElementById("cell-" + cell).style.color = "red";
+                } else {
+                    document.getElementById("cell-" + cell).style.color = "black";
                 }
                 document.getElementById("cell-" + cell).disabled = true;
                 cell++;
             }
         }
-        matrix = current;
+        matrix = currentSolved;
     } else {
         alert("Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!");
-    }    
+    }
 }
 
 function check() {
@@ -346,71 +349,100 @@ function download() {
 // Reload the game board
 function reload() {
     matrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
 
     var value = "";
-    for (var i = 0; i < 81; i++) {
-        if (reset[i] == "0") value = "";
-        else value = reset[i];
 
-        document.getElementById("cell-" + i).value = value;
-
-        if (value != "") {
-            document.getElementById("cell-" + i).disabled = true;
-            document.getElementById("cell-" + i).style.color = "black";
-        }
-        else {
-            document.getElementById("cell-" + i).disabled = false;
-            document.getElementById("cell-" + i).style.color = "#1976D2";
-        }
-    }
-
-    var cell = 0;
-    for (var i = 0; i < 9; i++) {
-        for (var j = 0; j < 9; j++) {
-            value = document.getElementById("cell-" + cell).value;
-            
-            if (value != "" && value != NaN) {
-                matrix[i][j] = parseInt(value);
+    if (reset !== "") {
+        for (var i = 0; i < 81; i++) {
+            if (reset[i] == "0") value = "";
+            else value = reset[i];
+    
+            document.getElementById("cell-" + i).value = value;
+    
+            if (value != "") {
+                document.getElementById("cell-" + i).disabled = true;
+                document.getElementById("cell-" + i).style.color = "black";
             }
-            
-            cell++;
+            else {
+                document.getElementById("cell-" + i).disabled = false;
+                document.getElementById("cell-" + i).style.color = "#1976D2";
+            }
+        }
+
+        var cell = 0;
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                value = document.getElementById("cell-" + cell).value;
+
+                if (value != "" && value != NaN) {
+                    matrix[i][j] = parseInt(value);
+                }
+
+                cell++;
+            }
+        }
+    } else {
+        for (var i = 0; i < 81; i++) {    
+            document.getElementById("cell-" + i).value = "";
         }
     }
 }
 
 function clear() {
     matrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
-        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
+
+    reset = "";
 
     for (var i = 0; i < 81; i++) {
         document.getElementById("cell-" + i).value = "";
-        document.getElementById("cell-" + i).disabled= false;
+        document.getElementById("cell-" + i).disabled = false;
         document.getElementById("cell-" + i).style.color = "black";
     }
+
+    stop();
+    document.getElementById("seconds").innerHTML = "0";
+    totalSeconds = 0;
+    timer = null;
 }
 
 // Stop game
 function stop() {
     clearInterval(timer);
-    document.getElementById("time_msg").innerHTML =
-    "Bạn đã dùng " + (totalSeconds / 60).toFixed(0) + " phút " + (totalSeconds % 60) + " giây";
+}
+
+function setInputFilter(textbox, inputFilter) {
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
+    });
 }
