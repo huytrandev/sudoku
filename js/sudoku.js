@@ -312,8 +312,17 @@ function fillAllSudoku() {
 
 function check() {
     var current = getCurrentSudoku();
+    var check = 0;
 
-    if (current.length < 1) alert("Bảng Sudoku đang trống");
+    while (check != 0) {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (current[i][j] != 0) check = 1;
+            }
+        }
+    }
+
+    if (check == 0) alert("Bảng Sudoku đang trống");
     else if (validMatrix(current)) alert("Tốt!!!");
     else alert("Có vẻ không đúng, vui lòng kiểm tra lại!!!");
 }
