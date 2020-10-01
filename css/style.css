@@ -78,6 +78,10 @@ input[type=number]:disabled:hover {
     box-shadow: 0 0 8px #666;
 }
 
+.btn {
+    width: 120px !important;
+}
+
 
 #cell-0,  #cell-1,  #cell-2  { border-top:    2px solid #000000; }
 #cell-2,  #cell-11, #cell-20 { border-right:  2px solid #000000; }

@@ -63,13 +63,30 @@ function generate() {
         document.getElementById("cell-" + i).value = value;
 
         // Display to the screen and disable cell which has a value
-        if (value != "") document.getElementById("cell-" + i).disabled = true;
-        else document.getElementById("cell-" + i).disabled = false;
+        if (value != "") {
+            document.getElementById("cell-" + i).disabled = true;
+            document.getElementById("cell-" + i).style.color = "black";
+        }
+        else {
+            document.getElementById("cell-" + i).disabled = false;
+            document.getElementById("cell-" + i).style.color = "#1976D2";
+        }
 
         // Set default color
-        document.getElementById("cell-" + i).style.color = "black";
+        
     }
 
+    matrix = [
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+    ];
     // Insert value to matrix
     var cell = 0;
     for (var i = 0; i < 9; i++) {
@@ -241,7 +258,18 @@ function validChildMatrix(matrix) {
 
 // Get current the Sudoku in the screen
 function getCurrentSudoku() {
-    var current = defaultMatrix;
+    var current = [
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+    ];
+
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
@@ -317,18 +345,33 @@ function download() {
 
 // Reload the game board
 function reload() {
-    matrix = defaultMatrix;
+    matrix = [
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+    ];
 
     var value = "";
     for (var i = 0; i < 81; i++) {
         if (reset[i] == "0") value = "";
         else value = reset[i];
 
-        document.getElementById("cell-" + i).style.color = "black";
         document.getElementById("cell-" + i).value = value;
 
-        if (value != "") document.getElementById("cell-" + i).disabled = true;
-        else document.getElementById("cell-" + i).disabled = false;
+        if (value != "") {
+            document.getElementById("cell-" + i).disabled = true;
+            document.getElementById("cell-" + i).style.color = "black";
+        }
+        else {
+            document.getElementById("cell-" + i).disabled = false;
+            document.getElementById("cell-" + i).style.color = "#1976D2";
+        }
     }
 
     var cell = 0;
@@ -346,7 +389,17 @@ function reload() {
 }
 
 function clear() {
-    matrix = defaultMatrix;
+    matrix = [
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+        [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+    ];
 
     for (var i = 0; i < 81; i++) {
         document.getElementById("cell-" + i).value = "";
