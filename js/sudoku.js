@@ -1,13 +1,31 @@
 var reset = "";
 var totalSeconds = 0;
 var timer = null;
-var matrix = [];
+const defaultMatrix = [
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+];
+
+var matrix = [
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0],
+    [0, 0, 0, 0, 0, 0, 0, 0 ,0]
+];
 
 function generate() {
-    matrix = [];
-    var arr = [];
-    var col = 0;
-    var result = "";
     var templates = [
         "004300209005009001070060043006002087190007400050083000600000105003508690042910300",
         "600120384008459072000006005000264030070080006940003000310000050089700000502000190",
@@ -30,39 +48,39 @@ function generate() {
         "270600050000070406006059030040005600081000040029006173390000002000097800807140005",
         "206597403080103000507000009000004210028006500409010060700305000001200000300480902",
     ];
+    // Random the templates above
     var matrixTemplate = templates[Math.floor(Math.random() * templates.length)];
 
+    // Save the original templates for reset the game puzzle
     reset = matrixTemplate;
 
+    // Insert value to screen
     for (var i = 0; i < 81; i++) {
         // Insert value to display
-        if (matrixTemplate[i] == "0") result = null;
-        else result = parseInt(matrixTemplate[i]);
+        if (matrixTemplate[i] == "0") value = "";
+        else value = matrixTemplate[i];
 
-        document.getElementById("cell-" + i).value = result;
+        document.getElementById("cell-" + i).value = value;
 
-        if (result != null) document.getElementById("cell-" + i).disabled = true;
+        // Display to the screen and disable cell which has a value
+        if (value != "") document.getElementById("cell-" + i).disabled = true;
         else document.getElementById("cell-" + i).disabled = false;
 
+        // Set default color
         document.getElementById("cell-" + i).style.color = "black";
+    }
 
-        // Push value into matrix
-        if (result == null)
-            result = 0;
-
-        if (col < 9) {
-            pushArray(arr, result);
-            col++;
-        } else {
-            matrix.push(arr);
-            col = 0;
-            arr = [];
-            pushArray(arr, result);
-            col++;
-        }
-
-        if (i == 80) {
-            matrix.push(arr);
+    // Insert value to matrix
+    var cell = 0;
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            var value = document.getElementById("cell-" + cell).value;
+            
+            if (value != "" && value != NaN) {
+                matrix[i][j] = parseInt(value);
+            }
+            
+            cell++;
         }
     }
 
@@ -71,6 +89,8 @@ function generate() {
     document.getElementById("seconds").innerHTML = "0";
     totalSeconds = 0;
     timer = null;
+
+    console.log(matrix);
 }
 
 function pushArray(array, value) {
@@ -89,7 +109,9 @@ function isSolved(matrix) {
     return true;
 }
 
+// Solve the matrix
 function solve(matrix) {
+    // debugger;
     if (isSolved(matrix)) {
         return matrix;
     } else {
@@ -100,11 +122,12 @@ function solve(matrix) {
 }
 
 function searchForSolution(matrix) {
+    // debugger;
     if (matrix.length < 1) {
         return false;
     } else {
-        var fisrt = matrix.shift();
-        const tryPath = solve(fisrt);
+        var first = matrix.shift();
+        const tryPath = solve(first);
         if (tryPath != false) {
             return tryPath;
         } else {
@@ -216,51 +239,52 @@ function validChildMatrix(matrix) {
     return true;
 }
 
-function fillAllSudoku() {
-    var current = solve(matrix);
+// Get current the Sudoku in the screen
+function getCurrentSudoku() {
+    var current = defaultMatrix;
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
-            document.getElementById("cell-" + cell).value = current[i][j];
-            if (current[i][j] !== matrix[i][j]) {
-                document.getElementById("cell-" + cell).style.color = "red";
-            }
-            // document.getElementById("cell-" + cell).disabled = true;
+            var value = document.getElementById("cell-" + cell).value;
+
+            if (value != "" && value != NaN) current[i][j] = parseInt(value);
+
             cell++;
         }
     }
-    matrix = current;
+    return current;
+}
+
+function fillAllSudoku() {
+    // Check matrix null or not
+    var current = getCurrentSudoku();
+    // debugger;
+    var cell = 0;
+    current = solve(current);
+
+    if (current != false) {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                document.getElementById("cell-" + cell).value = current[i][j];
+                if (current[i][j] !== matrix[i][j]) {
+                    document.getElementById("cell-" + cell).style.color = "red";
+                }
+                document.getElementById("cell-" + cell).disabled = true;
+                cell++;
+            }
+        }
+        matrix = current;
+    } else {
+        alert("Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!");
+    }    
 }
 
 function check() {
-    var current = [];
-    var col = 0;
-    var arr = [];
-    var value = "";
-    for (var i = 0; i < 81; i++) {
-        if (document.getElementById("cell-" + i).value == "") value = "0";
-        else value = document.getElementById("cell-" + i).value;
+    var current = getCurrentSudoku();
 
-        value = parseInt(value);
-
-        if (col < 9) {
-            pushArray(arr, value);
-            col++;
-        } else {
-            current.push(arr);
-            col = 0;
-            arr = [];
-            pushArray(arr, value);
-            col++;
-        }
-
-        if (i == 80) {
-            current.push(arr);
-        }
-    }
-
-    if (validMatrix(current)) document.getElementById("check_msg").innerHTML = "It's look good";
-    else document.getElementById("check_msg").innerHTML = "You got something wrong :(";
+    if (current.length < 1) alert("Bảng Sudoku đang trống");
+    else if (validMatrix(current)) alert("Tốt!!!");
+    else alert("Có vẻ không đúng, vui lòng kiểm tra lại!!!");
 }
 
 // Download Sudoku matrix
@@ -291,10 +315,11 @@ function download() {
     document.body.removeChild(element);
 }
 
+// Reload the game board
 function reload() {
-    var value = "";
-    var disable = "";
+    matrix = defaultMatrix;
 
+    var value = "";
     for (var i = 0; i < 81; i++) {
         if (reset[i] == "0") value = "";
         else value = reset[i];
@@ -302,8 +327,31 @@ function reload() {
         document.getElementById("cell-" + i).style.color = "black";
         document.getElementById("cell-" + i).value = value;
 
-        if (disable != "") document.getElementById("cell-" + i).disabled = true;
+        if (value != "") document.getElementById("cell-" + i).disabled = true;
         else document.getElementById("cell-" + i).disabled = false;
+    }
+
+    var cell = 0;
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            value = document.getElementById("cell-" + cell).value;
+            
+            if (value != "" && value != NaN) {
+                matrix[i][j] = parseInt(value);
+            }
+            
+            cell++;
+        }
+    }
+}
+
+function clear() {
+    matrix = defaultMatrix;
+
+    for (var i = 0; i < 81; i++) {
+        document.getElementById("cell-" + i).value = "";
+        document.getElementById("cell-" + i).disabled= false;
+        document.getElementById("cell-" + i).style.color = "black";
     }
 }
 
@@ -311,5 +359,5 @@ function reload() {
 function stop() {
     clearInterval(timer);
     document.getElementById("time_msg").innerHTML =
-    "You took about " + (totalSeconds / 60).toFixed(0) + " minutes " + (totalSeconds % 60) + " seconds";
+    "Bạn đã dùng " + (totalSeconds / 60).toFixed(0) + " phút " + (totalSeconds % 60) + " giây";
 }
