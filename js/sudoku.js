@@ -51,7 +51,6 @@ function generate() {
     // Random the templates above
     var matrixTemplate = templates[Math.floor(Math.random() * templates.length)];
 
-    debugger;
     // Save the original templates for reset the game puzzle
     reset = matrixTemplate;
 
@@ -88,6 +87,7 @@ function generate() {
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0]
     ];
+    debugger;
     // Insert value to matrix
     var cell = 0;
     for (var i = 0; i < 9; i++) {
@@ -259,6 +259,7 @@ function validChildMatrix(matrix) {
 
 // Get current the Sudoku in the screen
 function getCurrentSudoku() {
+    debugger;
     var current = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -275,8 +276,11 @@ function getCurrentSudoku() {
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             var value = document.getElementById("cell-" + cell).value;
+            if (value == "" || value == NaN) value = "0";
 
-            if (value != "" && value != NaN) current[i][j] = parseInt(value);
+            reset += value;
+
+            current[i][j] = parseInt(value);
 
             cell++;
         }
@@ -287,15 +291,33 @@ function getCurrentSudoku() {
 function fillAllSudoku() {
     // Check matrix null or not
     var current = getCurrentSudoku();
-    // debugger;
     var cell = 0;
-    var currentSolved = solve(current);
+    if (validMatrix(current)) {
+        var currentSolved = solve(current);
 
-    if (currentSolved != false) {
+        if (currentSolved != false) {
+            for (var i = 0; i < 9; i++) {
+                for (var j = 0; j < 9; j++) {
+                    document.getElementById("cell-" + cell).value = currentSolved[i][j];
+                    if (currentSolved[i][j] !== current[i][j]) {
+                        document.getElementById("cell-" + cell).style.color = "red";
+                    } else {
+                        document.getElementById("cell-" + cell).style.color = "black";
+                    }
+                    document.getElementById("cell-" + cell).disabled = true;
+                    cell++;
+                }
+            }
+            matrix = currentSolved;
+        } else {
+            alert("Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!");
+        }
+    } else {
+        var currentSolved = solve(matrix);
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 document.getElementById("cell-" + cell).value = currentSolved[i][j];
-                if (current[i][j] !== currentSolved[i][j]) {
+                if (currentSolved[i][j] !== matrix[i][j]) {
                     document.getElementById("cell-" + cell).style.color = "red";
                 } else {
                     document.getElementById("cell-" + cell).style.color = "black";
@@ -305,24 +327,23 @@ function fillAllSudoku() {
             }
         }
         matrix = currentSolved;
-    } else {
-        alert("Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!");
+    }
+    stop();
+}
+
+function isBlankSudoku(matrix) {
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            if (matrix[i][j] != 0) return false;
+            else return true;
+        }
     }
 }
 
 function check() {
     var current = getCurrentSudoku();
-    var check = 0;
 
-    while (check != 0) {
-        for (var i = 0; i < 9; i++) {
-            for (var j = 0; j < 9; j++) {
-                if (current[i][j] != 0) check = 1;
-            }
-        }
-    }
-
-    if (check == 0) alert("Bảng Sudoku đang trống");
+    if (isBlankSudoku(current)) alert("Bảng Sudoku đang trống");
     else if (validMatrix(current)) alert("Tốt!!!");
     else alert("Có vẻ không đúng, vui lòng kiểm tra lại!!!");
 }
@@ -375,9 +396,9 @@ function reload() {
         for (var i = 0; i < 81; i++) {
             if (reset[i] == "0") value = "";
             else value = reset[i];
-    
+
             document.getElementById("cell-" + i).value = value;
-    
+
             if (value != "") {
                 document.getElementById("cell-" + i).disabled = true;
                 document.getElementById("cell-" + i).style.color = "black";
@@ -401,7 +422,7 @@ function reload() {
             }
         }
     } else {
-        for (var i = 0; i < 81; i++) {    
+        for (var i = 0; i < 81; i++) {
             document.getElementById("cell-" + i).value = "";
         }
     }

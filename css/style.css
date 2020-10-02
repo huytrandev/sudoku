@@ -1,3 +1,7 @@
+* {
+    text-decoration: none;
+}
+
 html {
     margin: 0;
     padding: 0;
@@ -5,14 +9,15 @@ html {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #E0E0E0;
+    background-color:#EEEEEE;
 }
 
 #header h1 {
     text-align: center;
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     font-size: 50px;
-    font-weight: 600;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    margin: 10px 0 20px 0;
 }
 
 #game {
@@ -44,8 +49,9 @@ h1 {
     margin-bottom: .2em;
 }
 
-input[type=text]
+input[type=number]
 {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
     color: black;
     padding: 0;
     border: 0;
@@ -59,15 +65,15 @@ input[type=text]
     cursor: pointer;  
 }
 
-input[type=text]:hover {
+input[type=number]:hover {
     background-color: #eee;
 }
 
-input[type=text]:disabled {
+input[type=number]:disabled {
     cursor: default;
 }
 
-input[type=text]:disabled:hover {
+input[type=number]:disabled:hover {
     background-color: #FFFFFF;
 }
 
@@ -79,17 +85,23 @@ input[type=text]:disabled:hover {
 
 .btn {
     width: 120px !important;
+    margin: 3px;
 }
 
-.footer {
-    text-align: center !important;
-    border-top: 1px solid #BDBDBD;
-}
 
 #time {
     text-align: center;
     font-weight: bold;
     margin-top: 20px;
+}
+
+#information {
+    text-align: center;
+}
+
+#author {
+    font-style: italic;
+    color: #757575;
 }
 
 
