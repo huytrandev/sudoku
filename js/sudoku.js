@@ -73,6 +73,8 @@ function generate() {
     timer = null;
 
     timeStart();
+
+    document.getElementById("hint-elements").innerHTML = "";
 }
 
 // Is the Sudoku Board solved?
