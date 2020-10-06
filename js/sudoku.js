@@ -71,10 +71,8 @@ function generate() {
     document.getElementById("seconds").innerHTML = "0";
     totalSeconds = 0;
     timer = null;
-
-    timeStart();
-
     document.getElementById("hint-elements").innerHTML = "";
+    timeStart();    
 }
 
 // Is the Sudoku Board solved?
