@@ -1,6 +1,7 @@
 var reset = "";
 var totalSeconds = 0;
 var timer = null;
+var idCell = "";
 const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -10,20 +11,9 @@ const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
-
-var matrix = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0]
-];
+var matrix = defaultMatrix.slice();
 
 function generate() {
     var templates = [
@@ -47,6 +37,7 @@ function generate() {
         "980046025000090700700300004008023010045070008000105006014800900506000307090002600",
         "270600050000070406006059030040005600081000040029006173390000002000097800807140005",
         "206597403080103000507000009000004210028006500409010060700305000001200000300480902",
+        "080000032400006500000030100003605400100000006004807900009050000008700009620000080",
     ];
     // Random the templates above
     var matrixTemplate = templates[Math.floor(Math.random() * templates.length)];
@@ -66,41 +57,14 @@ function generate() {
         if (value != "") {
             document.getElementById("cell-" + i).disabled = true;
             document.getElementById("cell-" + i).style.color = "black";
-        }
-        else {
+        } else {
             document.getElementById("cell-" + i).disabled = false;
-            document.getElementById("cell-" + i).style.color = "#1976D2";
-        }
-
-        // Set default color
-
-    }
-
-    matrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ];
-    debugger;
-    // Insert value to matrix
-    var cell = 0;
-    for (var i = 0; i < 9; i++) {
-        for (var j = 0; j < 9; j++) {
-            var value = document.getElementById("cell-" + cell).value;
-
-            if (value != "" && value != NaN) {
-                matrix[i][j] = parseInt(value);
-            }
-
-            cell++;
+            document.getElementById("cell-" + i).style.color = "blue";
         }
     }
+        
+    matrix = defaultMatrix.slice(); // Set matrix to default matrix
+    matrix = getCurrentSudoku(); // Insert current value into matrix
 
     // Set time to default
     stop();
@@ -111,14 +75,10 @@ function generate() {
     timeStart();
 }
 
-function pushArray(array, value) {
-    array.push(value);
-}
-
 // Is the Sudoku Board solved?
 function isSolved(matrix) {
-    for (var i = 0; i < matrix.length; i++) {
-        for (var j = 0; j < matrix.length; j++) {
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
             if (matrix[i][j] == 0) {
                 return false;
             }
@@ -129,27 +89,25 @@ function isSolved(matrix) {
 
 // Solve the matrix
 function solve(matrix) {
-    // debugger;
     if (isSolved(matrix)) {
         return matrix;
     } else {
         const possibilites = nextMatrixes(matrix);
-        const validMatrix = keepOnlyValid(possibilites);
-        return searchForSolution(validMatrix);
+        const validMatrixes = keepOnlyValid(possibilites);
+        return searchForSolution(validMatrixes);
     }
 }
 
-function searchForSolution(matrix) {
-    // debugger;
-    if (matrix.length < 1) {
+function searchForSolution(matrixes) {
+    if (matrixes.length < 1) {
         return false;
     } else {
-        var first = matrix.shift();
+        var first = matrixes.shift();
         const tryPath = solve(first);
         if (tryPath != false) {
             return tryPath;
         } else {
-            return searchForSolution(matrix);
+            return searchForSolution(matrixes);
         }
     }
 }
@@ -161,8 +119,8 @@ function nextMatrixes(matrix) {
         const y = firstEmpty[0];
         const x = firstEmpty[1];
         for (var i = 1; i <= 9; i++) {
-            var newMatrix = [...matrix];
-            var row = [...newMatrix[y]];
+            var newMatrix = matrix.slice();
+            var row = newMatrix[y].slice();
             row[x] = i;
             newMatrix[y] = row;
             res.push(newMatrix);
@@ -172,7 +130,6 @@ function nextMatrixes(matrix) {
 }
 
 function findEmptyCell(matrix) {
-    // matrix -> [int, int]
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             if (matrix[i][j] == 0) {
@@ -182,26 +139,13 @@ function findEmptyCell(matrix) {
     }
 }
 
+// Filter valid matrix
 function keepOnlyValid(matrixes) {
     return matrixes.filter(m => validMatrix(m));
 }
 
 function validMatrix(matrix) {
     return validCols(matrix) && validRows(matrix) && validChildMatrix(matrix);
-}
-
-// Start the time record
-function timeStart() {
-    var secondsLabel = document.getElementById("seconds");
-
-    if (!timer) {
-        timer = setInterval(setTime, 1000);
-    }
-
-    function setTime() {
-        totalSeconds++;
-        secondsLabel.innerHTML = totalSeconds;
-    }
 }
 
 function validRows(matrix) {
@@ -243,7 +187,7 @@ function validChildMatrix(matrix) {
         for (var x = 0; x < 9; x += 3) {
             var current = [];
             for (var i = 0; i < 9; i++) {
-                var coordinates = [...childMatrixCoordinates[i]];
+                var coordinates = childMatrixCoordinates[i].slice();
                 coordinates[0] += y;
                 coordinates[1] += x;
                 if (current.includes(matrix[coordinates[0]][coordinates[1]])) {
@@ -259,8 +203,7 @@ function validChildMatrix(matrix) {
 
 // Get current the Sudoku in the screen
 function getCurrentSudoku() {
-    debugger;
-    var current = [
+    var currentMatrix = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -269,32 +212,25 @@ function getCurrentSudoku() {
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
 
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             var value = document.getElementById("cell-" + cell).value;
-            if (value == "" || value == NaN) value = "0";
-
-            reset += value;
-
-            current[i][j] = parseInt(value);
-
+            if (value != "") currentMatrix[i][j] = parseInt(value);
             cell++;
         }
     }
-    return current;
+    return currentMatrix;
 }
 
 function fillAllSudoku() {
-    // Check matrix null or not
     var current = getCurrentSudoku();
     var cell = 0;
     if (validMatrix(current)) {
         var currentSolved = solve(current);
-
         if (currentSolved != false) {
             for (var i = 0; i < 9; i++) {
                 for (var j = 0; j < 9; j++) {
@@ -348,6 +284,82 @@ function check() {
     else alert("Có vẻ không đúng, vui lòng kiểm tra lại!!!");
 }
 
+// Reload the game board
+function reload() {
+    matrix = defaultMatrix.slice();
+    var value = "";
+    var cell = 0;
+
+    if (reset != "") {
+        for (var i = 0; i < 81; i++) {
+            if (reset[i] == "0") value = "";
+            else value = reset[i];
+
+            document.getElementById("cell-" + i).value = value;
+
+            if (value != "") {
+                document.getElementById("cell-" + i).disabled = true;
+                document.getElementById("cell-" + i).style.color = "black";
+            }
+            else {
+                document.getElementById("cell-" + i).disabled = false;
+                document.getElementById("cell-" + i).style.color = "blue";
+            }
+        }
+
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                value = document.getElementById("cell-" + cell).value;
+
+                if (value != "" && value != NaN) {
+                    matrix[i][j] = parseInt(value);
+                }
+
+                cell++;
+            }
+        }
+    } else {
+        for (var i = 0; i < 81; i++) {
+            document.getElementById("cell-" + i).value = "";
+        }
+    }
+}
+
+function clear() {
+    matrix = defaultMatrix.slice();
+    reset = "";
+
+    for (var i = 0; i < 81; i++) {
+        document.getElementById("cell-" + i).value = "";
+        document.getElementById("cell-" + i).disabled = false;
+        document.getElementById("cell-" + i).style.color = "black";
+    }
+
+    stop();
+    document.getElementById("seconds").innerHTML = "0";
+    totalSeconds = 0;
+    timer = null;
+}
+
+// Start the time record
+function timeStart() {
+    var secondsLabel = document.getElementById("seconds");
+
+    if (!timer) {
+        timer = setInterval(setTime, 1000);
+    }
+
+    function setTime() {
+        totalSeconds++;
+        secondsLabel.innerHTML = totalSeconds;
+    }
+}
+
+// Stop game
+function stop() {
+    clearInterval(timer);
+}
+
 // Download Sudoku matrix
 function download() {
     var filename = "sudoku.txt";
@@ -376,88 +388,58 @@ function download() {
     document.body.removeChild(element);
 }
 
-// Reload the game board
-function reload() {
-    matrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ];
-
-    var value = "";
-
-    if (reset !== "") {
-        for (var i = 0; i < 81; i++) {
-            if (reset[i] == "0") value = "";
-            else value = reset[i];
-
-            document.getElementById("cell-" + i).value = value;
-
-            if (value != "") {
-                document.getElementById("cell-" + i).disabled = true;
-                document.getElementById("cell-" + i).style.color = "black";
+function getCoordinateById(id) {
+    var cell = 0;
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            var idCell = "cell-" + cell;
+            if (idCell === id) {
+                return [i, j];
             }
-            else {
-                document.getElementById("cell-" + i).disabled = false;
-                document.getElementById("cell-" + i).style.color = "#1976D2";
-            }
+            cell++;
         }
+    }
+}
 
-        var cell = 0;
+function nextMatrixesByCoordinate(matrix, id) {
+    var res = [];
+    const cell = getCoordinateById(id);
+    if (cell != 0) {
+        const y = cell[0];
+        const x = cell[1];
+        for (var i = 1; i <= 9; i++) {
+            var newMatrix = matrix.slice();
+            var row = newMatrix[y].slice();
+            row[x] = i;
+            newMatrix[y] = row;
+            res.push(newMatrix);
+        }
+    }
+    return res;
+}
+
+
+function hint(id) {
+    var current = getCurrentSudoku();
+    const possibilites = nextMatrixesByCoordinate(current, id);
+    const validMatrixes = keepOnlyValid(possibilites);
+
+    var res = [];
+    validMatrixes.forEach(function (item) {
+        current = getCurrentSudoku();
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
-                value = document.getElementById("cell-" + cell).value;
-
-                if (value != "" && value != NaN) {
-                    matrix[i][j] = parseInt(value);
-                }
-
-                cell++;
+                if (current[i][j] != item[i][j]) res.push(item[i][j]);
             }
         }
-    } else {
-        for (var i = 0; i < 81; i++) {
-            document.getElementById("cell-" + i).value = "";
-        }
-    }
-}
+    })
 
-function clear() {
-    matrix = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ];
+    document.getElementById("hint-elements").innerHTML = "";
+    res.forEach(function(item) {
+        document.getElementById("hint-elements").innerHTML += item + " ";
+    })
 
-    reset = "";
-
-    for (var i = 0; i < 81; i++) {
-        document.getElementById("cell-" + i).value = "";
-        document.getElementById("cell-" + i).disabled = false;
-        document.getElementById("cell-" + i).style.color = "black";
-    }
-
-    stop();
-    document.getElementById("seconds").innerHTML = "0";
-    totalSeconds = 0;
-    timer = null;
-}
-
-// Stop game
-function stop() {
-    clearInterval(timer);
+    console.log(res);
 }
 
 function setInputFilter(textbox, inputFilter) {
@@ -475,4 +457,55 @@ function setInputFilter(textbox, inputFilter) {
             }
         });
     });
+}
+
+window.onload = function () {
+    document.getElementById("generate").addEventListener("click", function () {
+        generate();
+    }, false);
+
+    document.getElementById("download").addEventListener("click", function () {
+        download();
+    }, false);
+
+    document.getElementById("start").addEventListener("click", function () {
+        timeStart();
+    }, false);
+
+    document.getElementById("stop").addEventListener("click", function () {
+        stop();
+    }, false);
+
+    document.getElementById("solve").addEventListener("click", function () {
+        fillAllSudoku();
+    }, false);
+
+    document.getElementById("check").addEventListener("click", function () {
+        check();
+    }, false);
+
+    document.getElementById("reload").addEventListener("click", function () {
+        reload();
+    }, false);
+
+    document.getElementById("clear").addEventListener("click", function () {
+        clear();
+    }, false);
+
+    for (var i = 0; i < 81; i++) {
+        setInputFilter(document.getElementById("cell-" + i), function (value) {
+            return /^\d*$/.test(value) && (value == "" || (parseInt(value) <= 9 && parseInt(value) >= 1));
+        });
+    }
+
+    for (var i = 0; i < 81; i++) {
+        document.getElementById("cell-" + i).addEventListener("click", function () {
+            idCell = this.id;
+        })
+    }
+
+    document.getElementById("hint").addEventListener("click", function () {
+        hint(idCell);
+        totalSeconds += 10;
+    }, false);
 }

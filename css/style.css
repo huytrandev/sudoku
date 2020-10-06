@@ -9,14 +9,13 @@ html {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color:#EEEEEE;
+    background-color:#FAFAFA;
 }
 
 #header h1 {
     text-align: center;
     letter-spacing: 5px;
     font-size: 50px;
-    font-family: 'Comic Sans MS', cursive, sans-serif;
     margin: 10px 0 20px 0;
 }
 
@@ -33,13 +32,11 @@ table,tr,td {
     padding:0;
 }
 
-table
-{
+table {
     border: 1px solid #000000;
 }
 
-td
-{
+td {
     border: 1px solid #000000;
     text-align: center;
     vertical-align: middle;  
@@ -49,9 +46,7 @@ h1 {
     margin-bottom: .2em;
 }
 
-input[type=number]
-{
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+input[type=text] {
     color: black;
     padding: 0;
     border: 0;
@@ -60,20 +55,19 @@ input[type=number]
     height: 45px;
     font-size: 20px;
     background-color: #FFFFFF;
-    outline: none;
     font-weight: bolder;
     cursor: pointer;  
 }
 
-input[type=number]:hover {
+input[type=text]:hover {
     background-color: #eee;
 }
 
-input[type=number]:disabled {
+input[type=text]:disabled {
     cursor: default;
 }
 
-input[type=number]:disabled:hover {
+input[type=text]:disabled:hover {
     background-color: #FFFFFF;
 }
 
@@ -86,6 +80,7 @@ input[type=number]:disabled:hover {
 .btn {
     width: 120px !important;
     margin: 3px;
+    border-radius: 0 !important;
 }
 
 
@@ -101,9 +96,25 @@ input[type=number]:disabled:hover {
 
 #author {
     font-style: italic;
+    font-size: 14px;
     color: #757575;
 }
 
+#hint-elements {
+    font-size: 24px;
+    font-weight: bold;
+    color: red;
+}
+
+.col-sm-8 {
+    min-width: fit-content;
+}
+
+.hint {
+    display: inline;
+    font-size: 20px;
+    margin: 0 10px;
+}
 
 #cell-0,  #cell-1,  #cell-2  { border-top:    1px solid #000000; }
 #cell-2,  #cell-11, #cell-20 { border-right:  1px solid #000000; }
