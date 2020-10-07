@@ -236,16 +236,24 @@ function fillAllSudoku() {
             for (var i = 0; i < 9; i++) {
                 for (var j = 0; j < 9; j++) {
                     document.getElementById("cell-" + cell).value = currentSolved[i][j];
-                    if (currentSolved[i][j] !== current[i][j]) {
+                    if (matrix[i][j] != current[i][j]) {
+                        document.getElementById("cell-" + cell).style.color = "blue";
+                    } else if (currentSolved[i][j] != current[i][j]) {
                         document.getElementById("cell-" + cell).style.color = "red";
                     } else {
-                        document.getElementById("cell-" + cell).style.color = "black";
+                        document.getElementById("cell-" + cell).disabled = true;
                     }
-                    document.getElementById("cell-" + cell).disabled = true;
                     cell++;
                 }
             }
             matrix = currentSolved;
+
+            document.getElementById("hint").disabled = true;
+            document.getElementById("solve").disabled = true;
+            document.getElementById("stop").disabled = true;
+            document.getElementById("reload").disabled = true;
+            document.getElementById("start").disabled = true;
+            document.getElementById("clear").disabled = false;
         } else {
             alert("Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!");
         }
@@ -265,10 +273,16 @@ function fillAllSudoku() {
                 }
             }
             matrix = currentSolved;
+
+            document.getElementById("hint").disabled = true;
+            document.getElementById("solve").disabled = true;
+            document.getElementById("stop").disabled = true;
+            document.getElementById("reload").disabled = true;
+            document.getElementById("start").disabled = true;
+            document.getElementById("clear").disabled = false;
         } else {
             window.alert("Sudoku này không thể giải. Bạn vui lòng kiểm tra lại đề");
         }
-        
     }
     stop();
 }
@@ -399,6 +413,7 @@ function start() {
 // Stop game
 function stop() {
     clearInterval(timer);
+    document.getElementById("hint-elements").innerHTML = "";
 }
 
 function getCoordinateById(id) {

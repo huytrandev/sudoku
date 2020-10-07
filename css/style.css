@@ -79,7 +79,7 @@ input[type=text]:disabled:hover {
 }
 
 .btn {
-    width: 120px !important;
+    min-width: 120px;
     margin: 3px;
     border-radius: 0 !important;
 }
@@ -115,6 +115,18 @@ input[type=text]:disabled:hover {
     display: inline;
     font-size: 20px;
     margin: 0 10px;
+}
+
+#tutorial h5 {
+    text-align: center;
+}
+
+#tutorial h5 a {
+    color: #505050;
+}
+
+#tutorial h5 a:hover {
+    color: #000;
 }
 
 #cell-0,  #cell-1,  #cell-2  { border-top:    1px solid #000000; }
