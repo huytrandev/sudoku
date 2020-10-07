@@ -50,6 +50,7 @@ input[type=text] {
     color: black;
     padding: 0;
     border: 0;
+    outline: none;
     text-align: center;
     width: 45px;
     height: 45px;
