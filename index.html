@@ -7,15 +7,65 @@
     <title>Sudoku</title>
     <link rel="icon" href="./img/sudoku.png">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="./css/style.css">
     <script src="./js/inputFilter.js"></script>
     <script src="./js/sudoku.js"></script>
     <script src="./js/download.js"></script>
+    <script src="https://kit.fontawesome.com/c9fb60fce5.js" crossorigin="anonymous"></script>
+    <script src="./js/jquery-3.3.1.slim.min.js"></script>
+    <script src="./js/poper.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
 
 </head>
 
 <body class="d-flex flex-column h-100">
     <div class="container">
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalScrollableTitle">Hướng dẫn tổng quan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Luật chơi</h5>
+                        <ul><strong>Điền số 1-9 vào tất cả các ô số còn thiếu trong 81 ô số, sao cho:</strong>
+                            <li>Số bạn điền là số duy nhất không bị trùng trong 9 ô nhỏ tỉ lệ 3x3.</li>
+                            <li>Số bạn điền là số duy nhất trong 9 số dãy hàng ngang, hàng dọc.</li>
+                        </ul>
+                        <h5>Các nút chức năng</h5>
+                        <ul>
+                            <li><strong>Trò chơi mới:</strong> Tạo ngẫu nhiên một bảng Sudoku và bắt đầu tính giờ</li>
+                            <li><strong>Bắt đầu:</strong> Bắt đầu tính giờ</li>
+                            <li><strong>Kết thúc:</strong> Kết thúc trò chơi</li>
+                            <li><strong>Kiểm tra:</strong> Kiểm tra những số nhập trên bảng Sudoku có hợp lệ hay chưa
+                            </li>
+                            <li><strong>Giải tất cả:</strong> Điền số thích hợp tất cả các ô trống</li>
+                            <li><strong>Phục hồi:</strong> Quay lại bảng Sudoku ban đầu</li>
+                            <li><strong>Xóa tất cả:</strong> Xóa tất cả số hiện có trên bảng Sudoku</li>
+                            <li><strong>Tải dữ liệu:</strong> Tải bảng Sudoku kiểu ma trận số, dưới dạng tệp .txt</li>
+                            <li><strong>Gợi ý:</strong> Gợi ý số hợp lệ có thể điền vào</li>
+                        </ul>
+                        <h5>Chú ý</h5>
+                        <ul>
+                            <li>Mỗi bảng Sudoku (đúng tiêu chuẩn) chỉ có duy nhất 1 cách giải phù hợp.</li>
+                            <li>Chỉ nhập được các số <strong>1-9</strong>, tất cả các ký tự còn lại đều không nhập được.
+                            </li>
+                            <li>Mỗi lần bạn chọn <strong>Gợi ý</strong>, thời gian sẽ cộng thêm 10 giây.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="header">
             <h1>Sudoku</h1>
         </div>
@@ -182,18 +232,12 @@
                         <button id="hint" type="button" class="btn btn-info">Gợi ý</button>
                     </p>
                 </div>
-                <div>
-                    <h5>Luật chơi</h5>
-                    <ul><strong>Điền số 1-9 vào tất cả các ô số còn thiếu trong 81 ô số, sao cho:</strong>
-                        <li>Số bạn điền là số duy nhất không bị trùng trong 9 ô nhỏ tỉ lệ 3x3.</li>
-                        <li>Số bạn điền là số duy nhất trong 9 số dãy hàng ngang, hàng dọc.</li>
-                    </ul>
-                    <h5>Chú ý</h5>
-                    <ul>
-                        <li>Mỗi bảng Sudoku chỉ có duy nhất 1 cách giải phù hợp.</li>
-                        <li>Chỉ nhập được các số 1-9, tất cả các ký tự còn lại đều không nhập được.</li>
-                        <li>Mỗi lần bạn chọn <strong>Gợi ý</strong>, thời gian sẽ cộng thêm 10 giây.</li>
-                    </ul>
+                <div id="tutorial">
+                    <h5>Hướng dẫn tổng quan 
+                        <a href="#" data-toggle="modal" data-target="#exampleModalScrollable">
+                            <img src="./img/info.png" alt="">
+                        </a>
+                    </h5>
                 </div>
             </div>
         </div>
@@ -238,12 +282,6 @@
 
         document.getElementById("solve").addEventListener("click", function () {
             fillAllSudoku();
-            document.getElementById("hint").disabled = true;
-            document.getElementById("solve").disabled = true;
-            document.getElementById("stop").disabled = true;
-            document.getElementById("reload").disabled = true;
-            document.getElementById("start").disabled = true;
-            document.getElementById("clear").disabled = false;
         }, false);
 
         document.getElementById("check").addEventListener("click", function () {
@@ -288,6 +326,10 @@
             setInputFilter(document.getElementById("cell-" + i), function (value) {
                 return /^\d*$/.test(value) && (value == "" || (parseInt(value) <= 9 && parseInt(value) >= 1));
             });
+
+            $('#myModal').on('shown.bs.modal', function () {
+                $('#myInput').trigger('focus')
+            })
         }
     </script>
 </body>
