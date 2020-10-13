@@ -14,6 +14,9 @@ const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 var matrix = defaultMatrix.slice();
+var rowDiff = [];
+var colDiff = [];
+var childMatrixDiff = [];
 
 function generate() {
     var templates = [
@@ -59,7 +62,7 @@ function generate() {
             document.getElementById("cell-" + i).style.color = "black";
         } else {
             document.getElementById("cell-" + i).disabled = false;
-            document.getElementById("cell-" + i).style.color = "blue";
+            document.getElementById("cell-" + i).style.color = "#BDBDBD";
         }
     }
         
@@ -149,10 +152,12 @@ function validMatrix(matrix) {
 }
 
 function validRows(matrix) {
+    rowDiff = [];
     for (var i = 0; i < 9; i++) {
         var current = [];
         for (var j = 0; j < 9; j++) {
             if (current.includes(matrix[i][j])) {
+                rowDiff.push(matrix[i][j]);
                 return false;
             } else if (matrix[i][j] != 0) {
                 current.push(matrix[i][j]);
@@ -163,10 +168,12 @@ function validRows(matrix) {
 }
 
 function validCols(matrix) {
+    colDiff = []
     for (var i = 0; i < 9; i++) {
         var current = [];
         for (var j = 0; j < 9; j++) {
             if (current.includes(matrix[j][i])) {
+                colDiff.push(matrix[j][i]);
                 return false;
             } else if (matrix[j][i] != 0) {
                 current.push(matrix[j][i]);
@@ -182,6 +189,7 @@ function validChildMatrix(matrix) {
         [1, 0], [1, 1], [1, 2],
         [2, 0], [2, 1], [2, 2]
     ];
+    childMatrixDiff = [];
 
     for (var y = 0; y < 9; y += 3) {
         for (var x = 0; x < 9; x += 3) {
@@ -191,6 +199,7 @@ function validChildMatrix(matrix) {
                 coordinates[0] += y;
                 coordinates[1] += x;
                 if (current.includes(matrix[coordinates[0]][coordinates[1]])) {
+                    childMatrixDiff.push(matrix[coordinates[0]][coordinates[1]]);
                     return false;
                 } else if (matrix[coordinates[0]][coordinates[1]] != 0) {
                     current.push(matrix[coordinates[0]][coordinates[1]]);
@@ -227,7 +236,6 @@ function getCurrentSudoku() {
 }
 
 function fillAllSudoku() {
-    debugger;
     var current = getCurrentSudoku();
     var cell = 0;
     if (validMatrix(current)) {
@@ -237,12 +245,15 @@ function fillAllSudoku() {
                 for (var j = 0; j < 9; j++) {
                     document.getElementById("cell-" + cell).value = currentSolved[i][j];
                     if (matrix[i][j] != current[i][j]) {
-                        document.getElementById("cell-" + cell).style.color = "blue";
-                    } else if (currentSolved[i][j] != current[i][j]) {
-                        document.getElementById("cell-" + cell).style.color = "red";
-                    } else {
-                        document.getElementById("cell-" + cell).disabled = true;
+                        document.getElementById("cell-" + cell).style.color = "#BDBDBD";
                     }
+                    
+                    if (currentSolved[i][j] != current[i][j]) {
+                        document.getElementById("cell-" + cell).style.color = "blue";
+                    }
+
+                    document.getElementById("cell-" + cell).disabled = true;
+                    
                     cell++;
                 }
             }
@@ -264,10 +275,11 @@ function fillAllSudoku() {
                 for (var j = 0; j < 9; j++) {
                     document.getElementById("cell-" + cell).value = currentSolved[i][j];
                     if (currentSolved[i][j] !== matrix[i][j]) {
-                        document.getElementById("cell-" + cell).style.color = "red";
+                        document.getElementById("cell-" + cell).style.color = "blue";
                     } else {
                         document.getElementById("cell-" + cell).style.color = "black";
                     }
+
                     document.getElementById("cell-" + cell).disabled = true;
                     cell++;
                 }
@@ -296,12 +308,44 @@ function isBlankSudoku(matrix) {
     }
 }
 
+function matrixDifference(m1, m2) {
+    var m = [], diff = [];
+
+    for (var i = 0; i < m1.length; i++) {
+        m[m1[i]] = true;
+    }
+
+    for (var i = 0; i < m2.length; i++) {
+        if (m[m2[i]]) {
+            delete m[m2[i]];
+        } else {
+            m[m2[i]] = true;
+        }
+    }
+
+    for (var k in m) {
+        diff.push(k);
+    }
+
+    return diff;
+}
+
 function check() {
     var current = getCurrentSudoku();
 
     if (isBlankSudoku(current)) alert("Bảng Sudoku đang trống");
-    else if (validMatrix(current)) alert("Tốt!!!");
-    else alert("Có vẻ không đúng, vui lòng kiểm tra lại!!!");
+    else if (validMatrix(current)) {
+        alert("Tốt!!!");
+    } else {
+        // for (var i = 0; i < 9; i++) {
+        //     for (var j = 0; j < 9; j++) {
+        //         if (matrix[i][j] == current[i][j]) {
+
+        //         }
+        //     }
+        // }
+        window.alert("Hình như không đúng, hãy thử kiểm tra lại");
+    }
 }
 
 // Reload the game board
@@ -322,7 +366,7 @@ function reload() {
             }
             else {
                 document.getElementById("cell-" + i).disabled = false;
-                document.getElementById("cell-" + i).style.color = "blue";
+                document.getElementById("cell-" + i).style.color = "light#BDBDBD";
             }
         }
 
@@ -349,7 +393,7 @@ function reload() {
                 } else {
                     element.value = "";
                     element.disabled = false;
-                    element.style.color = "blue";
+                    element.style.color = "#BDBDBD";
                 }
                 cell++;
             }
@@ -405,7 +449,7 @@ function start() {
             cell.style.color = "black";
         } else {
             cell.disabled = false;
-            cell.style.color = "blue";
+            cell.style.color = "#BDBDBD";
         }
     }
 }
@@ -433,7 +477,6 @@ function nextMatrixesByCoordinate(matrix, id) {
     var res = [];
     const cell = getCoordinateById(id);
     if (cell != 0) {
-        debugger;
         const y = cell[0];
         const x = cell[1];
         for (var i = 1; i <= 9; i++) {
@@ -471,6 +514,6 @@ function hint(id) {
 
         totalSeconds += 10;
     } else {
-        window.alert("Hình như bạn chưa chọn ô thì phải !?!");
+        window.alert("Vui lòng chọn 1 ô !?!");
     }
 }
