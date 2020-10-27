@@ -1,7 +1,7 @@
+"use strict"
 var reset = "";
 var totalSeconds = 0;
 var timer = null;
-var idCell = "";
 const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -48,6 +48,7 @@ function generate() {
     // Save the original templates for reset the game puzzle
     reset = matrixTemplate;
 
+    var value = '';
     // Insert value to screen
     for (var i = 0; i < 81; i++) {
         // Insert value to display
@@ -65,7 +66,7 @@ function generate() {
             document.getElementById("cell-" + i).style.color = "#BDBDBD";
         }
     }
-        
+
     matrix = defaultMatrix.slice(); // Set matrix to default matrix
     matrix = getCurrentSudoku(); // Insert current value into matrix
 
@@ -75,7 +76,9 @@ function generate() {
     totalSeconds = 0;
     timer = null;
     document.getElementById("hint-elements").innerHTML = "";
-    timeStart();    
+    timeStart();
+    //clear color
+    clearColor();
 }
 
 // Is the Sudoku Board solved?
@@ -164,6 +167,7 @@ function validRows(matrix) {
             }
         }
     }
+
     return true;
 }
 
@@ -247,13 +251,13 @@ function fillAllSudoku() {
                     if (matrix[i][j] != current[i][j]) {
                         document.getElementById("cell-" + cell).style.color = "#BDBDBD";
                     }
-                    
+
                     if (currentSolved[i][j] != current[i][j]) {
                         document.getElementById("cell-" + cell).style.color = "blue";
                     }
 
                     document.getElementById("cell-" + cell).disabled = true;
-                    
+
                     cell++;
                 }
             }
@@ -415,6 +419,7 @@ function clear() {
         document.getElementById("cell-" + i).style.color = "black";
     }
 
+    clearColor();
     stop();
     document.getElementById("seconds").innerHTML = "0";
     totalSeconds = 0;
@@ -439,7 +444,7 @@ function timeStart() {
 
 function start() {
     timeStart();
-    
+    clearColor();
     matrix = getCurrentSudoku();
 
     for (var i = 0; i < 81; i++) {
@@ -516,4 +521,77 @@ function hint(id) {
     } else {
         window.alert("Vui lòng chọn 1 ô !?!");
     }
+}
+
+function converIDCell(id) {
+    return parseInt(id.slice(5));
+}
+
+function getRowStart(id) {
+    for (var i = 0; i <= 9; i++) {
+        if (id < (9 * i)) {
+            return 9 * (i - 1);
+        }
+    }
+}
+
+function getColStart(id) {
+    return id - getRowStart(id);
+}
+
+function clearColor() {
+    var allCell = document.querySelectorAll('.board-game td input');
+
+    for (var i = 0; i < allCell.length; i++) {
+        if (allCell[i].classList.contains('relative-cell')) {
+            allCell[i].classList.remove('relative-cell');
+        }
+
+        if (allCell[i].classList.contains('selected-cell')) {
+            allCell[i].classList.remove('selected-cell');
+        }
+    }
+}
+
+function changeColor(id) {
+    var convertedID = converIDCell(id);
+    var rowStart = getRowStart(convertedID);
+    var colStart = getColStart(convertedID);
+
+    // get coordinate by ID cell
+    var rowCoordinate = convertedID % 9;
+    var colCoordinate = parseInt(convertedID / 9);
+    var postionRowCoordinate = 0;
+
+    // get start position of board child: row
+    if (rowCoordinate >= 0 && rowCoordinate <= 2) postionRowCoordinate = 0;
+    else if (rowCoordinate >= 3 && rowCoordinate <= 5) postionRowCoordinate = 3;
+    else if (rowCoordinate >= 6 && rowCoordinate <= 8) postionRowCoordinate = 6;
+
+    // convert coordinate: [row, col] to ID
+
+    // var startPostionCell = (postionRowCoordinate * 9) + (colCoordinate - rowCoordinate);
+    // console.log((colCoordinate - rowCoordinate));
+
+    clearColor();
+
+    document.getElementById('cell-' + convertedID).classList.add('selected-cell');
+
+    for (var i = 0; i < 9; i++) {
+        if ((rowStart + i) != convertedID) {
+            document.getElementById('cell-' + (rowStart + i)).classList.add('relative-cell');
+        }
+
+        if ((colStart + (9 * i)) != convertedID) {
+            document.getElementById('cell-' + (colStart + (9 * i))).classList.add('relative-cell');
+        }
+    }
+
+    // for (var i = 0; i <= 18; i += 9) {
+    //     for (var j = 0; j < 3; j++) {
+    //         if ((rowStart + i + j) != convertedID) {
+    //             document.getElementById('cell-' + (rowStart + i + j)).classList.add('relative-cell');
+    //         }
+    //     }
+    // }
 }

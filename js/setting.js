@@ -1,9 +1,12 @@
+"use strict"
 window.onload = function () {
+    var idCell = '';
+
     document.getElementById("stop").disabled = true;
     document.getElementById("clear").disabled = true;
 
     document.getElementById("generate").addEventListener("click", function () {
-        idCell = "";
+        idCell = '';
         for (var i = 0; i < 81; i++) {
             document.getElementById("cell-" + i).disabled = false;
         }
@@ -64,6 +67,7 @@ window.onload = function () {
     for (var i = 0; i < 81; i++) {
         document.getElementById("cell-" + i).addEventListener("click", function () {
             idCell = this.id;
+            changeColor(idCell);
             // this.style.backgroundColor = "lightgrey";
         });
 
