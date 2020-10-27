@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Sudoku</title>
+    <!-- CSS -->
     <link rel="icon" href="./img/sudoku.png">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="./css/style.css">
+    <!-- Script -->
     <script src="./js/inputFilter.js"></script>
     <script src="./js/sudoku.js"></script>
     <script src="./js/download.js"></script>
@@ -19,7 +18,10 @@
     <script src="./js/setting.js"></script>
 </head>
 
-<body class="d-flex flex-column h-100">
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Sudoku</a>
+    </nav>
     <div class="container">
         <!-- Modal -->
         <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
@@ -60,17 +62,18 @@
                         </ul>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="header">
-            <h1>Sudoku</h1>
-        </div>
+        <!-- End Modal -->
         <div class="row">
             <div class="col-sm-8" id="game">
-                <table id="table">
+                <p id="time">
+                    Thời gian: <label id="seconds">0</label> giây
+                </p>
+                <table id="table" class="board-game">
                     <tr>
                         <td><input id="cell-0" type="text"></td>
                         <td><input id="cell-1" type="text"></td>
@@ -198,9 +201,7 @@
                     </tr>
                 </table>
                 <div>
-                    <p id="time">
-                        Thời gian: <label id="seconds">0</label> giây
-                    </p>
+
                     <div id="hint-zone">
                         <p id="hint-elements"></p>
                     </div>
@@ -209,27 +210,27 @@
             <div class="col-sm-4" id="note">
                 <div id="actions-wrap">
                     <p>
-                        <button id="generate" type="button" class="btn btn-info">Trò chơi mới</button>
-                        <button id="start" type="button" class="btn btn-info">Bắt đầu</button>
+                        <button id="generate" type="button" class="btn btn-outline-dark">Trò chơi mới</button>
+                        <button id="start" type="button" class="btn btn-outline-dark">Bắt đầu</button>
                     </p>
                     <p>
-                        <button id="stop" type="button" class="btn btn-info">Kết thúc</button>
-                        <button id="check" type="button" class="btn btn-info">Kiểm tra</button>
+                        <button id="stop" type="button" class="btn btn-outline-dark">Kết thúc</button>
+                        <button id="check" type="button" class="btn btn-outline-dark">Kiểm tra</button>
                     </p>
                     <p>
-                        <button id="solve" type="button" class="btn btn-info">Giải tất cả</button>
-                        <button id="reload" type="button" class="btn btn-info">Phục hồi</button>
+                        <button id="solve" type="button" class="btn btn-outline-dark">Giải tất cả</button>
+                        <button id="reload" type="button" class="btn btn-outline-dark">Phục hồi</button>
                     </p>
                     <p>
-                        <button id="clear" type="button" class="btn btn-info">Xoá tất cả</button>
-                        <button id="download" type="button" class="btn btn-info">Tải dữ liệu</button>
+                        <button id="clear" type="button" class="btn btn-outline-dark">Xoá tất cả</button>
+                        <button id="download" type="button" class="btn btn-outline-dark">Tải dữ liệu</button>
                     </p>
                     <p>
-                        <button id="hint" type="button" class="btn btn-info">Gợi ý</button>
+                        <button id="hint" type="button" class="btn btn-outline-dark">Gợi ý</button>
                     </p>
                 </div>
                 <div id="tutorial">
-                    <h5>Hướng dẫn tổng quan 
+                    <h5>Hướng dẫn tổng quan
                         <a href="#" data-toggle="modal" data-target="#exampleModalScrollable">
                             <img src="./img/info-black-24dp.svg" alt="">
                         </a>
