@@ -1,7 +1,16 @@
-"use strict"
-var reset = "";
-var totalSeconds = 0;
-var timer = null;
+'use strict';
+var reset = '';
+
+var seconds = 0;
+var minutes = 0;
+var displaySeconds = 0;
+var displayMinutes = 0;
+//Define var to hold setInterval() function
+var interval = null;
+//Define var to hold stopwatch status
+var statusClock = 'stopped';
+
+
 const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -14,33 +23,30 @@ const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 var matrix = defaultMatrix.slice();
-var rowDiff = [];
-var colDiff = [];
-var childMatrixDiff = [];
 
 function generate() {
     var templates = [
-        "004300209005009001070060043006002087190007400050083000600000105003508690042910300",
-        "600120384008459072000006005000264030070080006940003000310000050089700000502000190",
-        "000000657702400100350006000500020009210300500047109008008760090900502030030018206",
-        "065370002000001370000640800097004028080090001100020940040006700070018050230900060",
-        "850420370003000010000170009000500602029304000010000438046090805005000900702840003",
-        "680905000003000508402108703390720800000000010045006900060804002001002075700013000",
-        "020980040030047601019006080700490000800023907000605000904800006001000300350014020",
-        "290041000470302050000060208039400005100000070504100603613200704000003080005900100",
-        "431800006000300010000006205609134070020000040000570089003659020500080104807000003",
-        "503070190000006750047190600400038000950200300000010072000804001300001860086720005",
-        "900084060604005207030070080760001500053000001000409603105026090002040000800003710",
-        "205040003001009000046001587004607090802000056090020340170008200000500800500903001",
-        "065370002000001370000640800097004028080090001100020940040006700070018050230900060",
-        "700084005300701020080260401624109038803600010000000002900000000001005790035400006",
-        "497200000100400005000016098620300040300900000001072600002005870000600004530097061",
-        "807000000610005430400690000002800709003007820900051046000009670054000000200403018",
-        "107008000650100000300060072060030250480009700001407009000000800003980015040203060",
-        "980046025000090700700300004008023010045070008000105006014800900506000307090002600",
-        "270600050000070406006059030040005600081000040029006173390000002000097800807140005",
-        "206597403080103000507000009000004210028006500409010060700305000001200000300480902",
-        "080000032400006500000030100003605400100000006004807900009050000008700009620000080",
+        '004300209005009001070060043006002087190007400050083000600000105003508690042910300',
+        '600120384008459072000006005000264030070080006940003000310000050089700000502000190',
+        '000000657702400100350006000500020009210300500047109008008760090900502030030018206',
+        '065370002000001370000640800097004028080090001100020940040006700070018050230900060',
+        '850420370003000010000170009000500602029304000010000438046090805005000900702840003',
+        '680905000003000508402108703390720800000000010045006900060804002001002075700013000',
+        '020980040030047601019006080700490000800023907000605000904800006001000300350014020',
+        '290041000470302050000060208039400005100000070504100603613200704000003080005900100',
+        '431800006000300010000006205609134070020000040000570089003659020500080104807000003',
+        '503070190000006750047190600400038000950200300000010072000804001300001860086720005',
+        '900084060604005207030070080760001500053000001000409603105026090002040000800003710',
+        '205040003001009000046001587004607090802000056090020340170008200000500800500903001',
+        '065370002000001370000640800097004028080090001100020940040006700070018050230900060',
+        '700084005300701020080260401624109038803600010000000002900000000001005790035400006',
+        '497200000100400005000016098620300040300900000001072600002005870000600004530097061',
+        '807000000610005430400690000002800709003007820900051046000009670054000000200403018',
+        '107008000650100000300060072060030250480009700001407009000000800003980015040203060',
+        '980046025000090700700300004008023010045070008000105006014800900506000307090002600',
+        '270600050000070406006059030040005600081000040029006173390000002000097800807140005',
+        '206597403080103000507000009000004210028006500409010060700305000001200000300480902',
+        '080000032400006500000030100003605400100000006004807900009050000008700009620000080',
     ];
     // Random the templates above
     var matrixTemplate = templates[Math.floor(Math.random() * templates.length)];
@@ -52,18 +58,18 @@ function generate() {
     // Insert value to screen
     for (var i = 0; i < 81; i++) {
         // Insert value to display
-        if (matrixTemplate[i] == "0") value = "";
+        if (matrixTemplate[i] == '0') value = '';
         else value = matrixTemplate[i];
 
-        document.getElementById("cell-" + i).value = value;
+        document.getElementById('cell-' + i).value = value;
 
         // Display to the screen and disable cell which has a value
-        if (value != "") {
-            document.getElementById("cell-" + i).disabled = true;
-            document.getElementById("cell-" + i).style.color = "black";
+        if (value != '') {
+            document.getElementById('cell-' + i).disabled = true;
+            document.getElementById('cell-' + i).style.color = 'black';
         } else {
-            document.getElementById("cell-" + i).disabled = false;
-            document.getElementById("cell-" + i).style.color = "#BDBDBD";
+            document.getElementById('cell-' + i).disabled = false;
+            document.getElementById('cell-' + i).style.color = '#BDBDBD';
         }
     }
 
@@ -71,14 +77,17 @@ function generate() {
     matrix = getCurrentSudoku(); // Insert current value into matrix
 
     // Set time to default
-    stop();
-    document.getElementById("seconds").innerHTML = "0";
-    totalSeconds = 0;
-    timer = null;
-    document.getElementById("hint-elements").innerHTML = "";
-    timeStart();
+    timeReset();
+    interval = window.setInterval(timeStart, 1000);
+    statusClock = 'started';
+    document.getElementById('pause').src = './img/pause.svg';
+
     //clear color
     clearColor();
+
+    // clear hint
+    document.getElementById('intro').innerHTML = 'Hãy thử chọn "Gợi ý" nếu như bạn chưa thể tìm ra đáp án';
+    document.getElementById('hint-elements').innerHTML = '';
 }
 
 // Is the Sudoku Board solved?
@@ -151,16 +160,17 @@ function keepOnlyValid(matrixes) {
 }
 
 function validMatrix(matrix) {
-    return validCols(matrix) && validRows(matrix) && validChildMatrix(matrix);
+    var vRows = validRows(matrix);
+    var vCols = validCols(matrix);
+    var vChild = validChildMatrix(matrix);
+    return (vRows && vCols && vChild);
 }
 
 function validRows(matrix) {
-    rowDiff = [];
     for (var i = 0; i < 9; i++) {
         var current = [];
         for (var j = 0; j < 9; j++) {
             if (current.includes(matrix[i][j])) {
-                rowDiff.push(matrix[i][j]);
                 return false;
             } else if (matrix[i][j] != 0) {
                 current.push(matrix[i][j]);
@@ -172,12 +182,10 @@ function validRows(matrix) {
 }
 
 function validCols(matrix) {
-    colDiff = []
     for (var i = 0; i < 9; i++) {
         var current = [];
         for (var j = 0; j < 9; j++) {
             if (current.includes(matrix[j][i])) {
-                colDiff.push(matrix[j][i]);
                 return false;
             } else if (matrix[j][i] != 0) {
                 current.push(matrix[j][i]);
@@ -193,7 +201,7 @@ function validChildMatrix(matrix) {
         [1, 0], [1, 1], [1, 2],
         [2, 0], [2, 1], [2, 2]
     ];
-    childMatrixDiff = [];
+    var child = 0;
 
     for (var y = 0; y < 9; y += 3) {
         for (var x = 0; x < 9; x += 3) {
@@ -203,11 +211,11 @@ function validChildMatrix(matrix) {
                 coordinates[0] += y;
                 coordinates[1] += x;
                 if (current.includes(matrix[coordinates[0]][coordinates[1]])) {
-                    childMatrixDiff.push(matrix[coordinates[0]][coordinates[1]]);
                     return false;
                 } else if (matrix[coordinates[0]][coordinates[1]] != 0) {
                     current.push(matrix[coordinates[0]][coordinates[1]]);
                 }
+
             }
         }
     }
@@ -231,8 +239,8 @@ function getCurrentSudoku() {
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
-            var value = document.getElementById("cell-" + cell).value;
-            if (value != "") currentMatrix[i][j] = parseInt(value);
+            var value = document.getElementById('cell-' + cell).value;
+            if (value != '') currentMatrix[i][j] = parseInt(value);
             cell++;
         }
     }
@@ -240,6 +248,7 @@ function getCurrentSudoku() {
 }
 
 function fillAllSudoku() {
+    debugger;
     var current = getCurrentSudoku();
     var cell = 0;
     if (validMatrix(current)) {
@@ -247,99 +256,87 @@ function fillAllSudoku() {
         if (currentSolved != false) {
             for (var i = 0; i < 9; i++) {
                 for (var j = 0; j < 9; j++) {
-                    document.getElementById("cell-" + cell).value = currentSolved[i][j];
+                    document.getElementById('cell-' + cell).value = currentSolved[i][j];
                     if (matrix[i][j] != current[i][j]) {
-                        document.getElementById("cell-" + cell).style.color = "#BDBDBD";
+                        document.getElementById('cell-' + cell).style.color = '#BDBDBD';
                     }
 
                     if (currentSolved[i][j] != current[i][j]) {
-                        document.getElementById("cell-" + cell).style.color = "blue";
+                        document.getElementById('cell-' + cell).style.color = '#1976D2';
                     }
 
-                    document.getElementById("cell-" + cell).disabled = true;
+                    document.getElementById('cell-' + cell).disabled = true;
 
                     cell++;
                 }
             }
             matrix = currentSolved;
 
-            document.getElementById("hint").disabled = true;
-            document.getElementById("solve").disabled = true;
-            document.getElementById("stop").disabled = true;
-            document.getElementById("reload").disabled = true;
-            document.getElementById("start").disabled = true;
-            document.getElementById("clear").disabled = false;
+            document.getElementById('hint').disabled = true;
+            document.getElementById('solve').disabled = true;
+            document.getElementById('pause').disabled = true;
+            document.getElementById('reload').disabled = true;
+            document.getElementById('start').disabled = true;
+            document.getElementById('clear').disabled = false;
+
+            document.getElementById('pause').src = './img/play.svg';
         } else {
-            alert("Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!");
+            alert('Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!');
         }
     } else {
         var currentSolved = solve(matrix);
         if (currentSolved != false) {
             for (var i = 0; i < 9; i++) {
                 for (var j = 0; j < 9; j++) {
-                    document.getElementById("cell-" + cell).value = currentSolved[i][j];
+                    document.getElementById('cell-' + cell).value = currentSolved[i][j];
                     if (currentSolved[i][j] !== matrix[i][j]) {
-                        document.getElementById("cell-" + cell).style.color = "blue";
+                        document.getElementById('cell-' + cell).style.color = '#1976D2';
                     } else {
-                        document.getElementById("cell-" + cell).style.color = "black";
+                        document.getElementById('cell-' + cell).style.color = 'black';
                     }
 
-                    document.getElementById("cell-" + cell).disabled = true;
+                    document.getElementById('cell-' + cell).disabled = true;
                     cell++;
                 }
             }
             matrix = currentSolved;
 
-            document.getElementById("hint").disabled = true;
-            document.getElementById("solve").disabled = true;
-            document.getElementById("stop").disabled = true;
-            document.getElementById("reload").disabled = true;
-            document.getElementById("start").disabled = true;
-            document.getElementById("clear").disabled = false;
+            document.getElementById('hint').disabled = true;
+            document.getElementById('solve').disabled = true;
+            document.getElementById('pause').disabled = true;
+            document.getElementById('reload').disabled = true;
+            document.getElementById('start').disabled = true;
+            document.getElementById('clear').disabled = false;
+
+            document.getElementById('pause').src = './img/play.svg';
         } else {
-            window.alert("Sudoku này không thể giải. Bạn vui lòng kiểm tra lại đề");
+            window.alert('Sudoku này không thể giải. Bạn vui lòng kiểm tra lại đề');
         }
     }
-    stop();
+
+    // clear hint
+    document.getElementById('hint-elements').innerHTML = '';
+
+    // stopping time
+    window.clearInterval(interval);
+    statusClock = 'stopped';
 }
 
 function isBlankSudoku(matrix) {
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
             if (matrix[i][j] != 0) return false;
-            else return true;
         }
     }
-}
-
-function matrixDifference(m1, m2) {
-    var m = [], diff = [];
-
-    for (var i = 0; i < m1.length; i++) {
-        m[m1[i]] = true;
-    }
-
-    for (var i = 0; i < m2.length; i++) {
-        if (m[m2[i]]) {
-            delete m[m2[i]];
-        } else {
-            m[m2[i]] = true;
-        }
-    }
-
-    for (var k in m) {
-        diff.push(k);
-    }
-
-    return diff;
+    return true;
 }
 
 function check() {
     var current = getCurrentSudoku();
 
-    if (isBlankSudoku(current)) alert("Bảng Sudoku đang trống");
+    if (isBlankSudoku(current)) alert('Bảng Sudoku đang trống');
     else if (validMatrix(current)) {
-        alert("Tốt!!!");
+        alert('Tốt!!!');
     } else {
         // for (var i = 0; i < 9; i++) {
         //     for (var j = 0; j < 9; j++) {
@@ -348,37 +345,41 @@ function check() {
         //         }
         //     }
         // }
-        window.alert("Hình như không đúng, hãy thử kiểm tra lại");
+        console.log(rowDiff);
+        console.log(colDiff);
+        console.log(childMatrixDiff);
+
+        window.alert('Hình như không đúng, hãy thử kiểm tra lại');
     }
 }
 
 // Reload the game board
 function reload() {
-    if (reset != "") {
-        var value = "";
+    if (reset != '') {
+        var value = '';
         var cell = 0;
         matrix = defaultMatrix.slice();
         for (var i = 0; i < 81; i++) {
-            if (reset[i] == "0") value = "";
+            if (reset[i] == '0') value = '';
             else value = reset[i];
 
-            document.getElementById("cell-" + i).value = value;
+            document.getElementById('cell-' + i).value = value;
 
-            if (value != "") {
-                document.getElementById("cell-" + i).disabled = true;
-                document.getElementById("cell-" + i).style.color = "black";
+            if (value != '') {
+                document.getElementById('cell-' + i).disabled = true;
+                document.getElementById('cell-' + i).style.color = 'black';
             }
             else {
-                document.getElementById("cell-" + i).disabled = false;
-                document.getElementById("cell-" + i).style.color = "light#BDBDBD";
+                document.getElementById('cell-' + i).disabled = false;
+                document.getElementById('cell-' + i).style.color = '#BDBDBD';
             }
         }
 
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
-                value = document.getElementById("cell-" + cell).value;
+                value = document.getElementById('cell-' + cell).value;
 
-                if (value != "" && value != NaN) {
+                if (value != '' && value != NaN) {
                     matrix[i][j] = parseInt(value);
                 }
 
@@ -389,87 +390,118 @@ function reload() {
         var cell = 0;
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
-                var element = document.getElementById("cell-" + cell);
+                var element = document.getElementById('cell-' + cell);
                 if (matrix[i][j] != 0) {
                     element.value = matrix[i][j];
                     element.disabled = true;
-                    element.style.color = "black";
+                    element.style.color = 'black';
                 } else {
-                    element.value = "";
+                    element.value = '';
                     element.disabled = false;
-                    element.style.color = "#BDBDBD";
+                    element.style.color = '#BDBDBD';
                 }
                 cell++;
             }
         }
     } else {
         for (var i = 0; i < 81; i++) {
-            document.getElementById("cell-" + i).value = "";
+            document.getElementById('cell-' + i).value = '';
         }
     }
 }
 
 function clear() {
     matrix = defaultMatrix.slice();
-    reset = "";
+    reset = '';
 
     for (var i = 0; i < 81; i++) {
-        document.getElementById("cell-" + i).value = "";
-        document.getElementById("cell-" + i).disabled = false;
-        document.getElementById("cell-" + i).style.color = "black";
+        document.getElementById('cell-' + i).value = '';
+        document.getElementById('cell-' + i).disabled = false;
+        document.getElementById('cell-' + i).style.color = 'black';
     }
 
     clearColor();
-    stop();
-    document.getElementById("seconds").innerHTML = "0";
-    totalSeconds = 0;
-    timer = null;
+    timeReset();
 
-    document.getElementById("start").disabled = false;
+    // change time icon
+    document.getElementById('pause').src = './img/play.svg';
+    document.getElementById('intro').innerHTML = 'Hãy thử chọn "Gợi ý" nếu như bạn chưa thể tìm ra đáp án';
+    document.getElementById('hint-elements').innerHTML = '';
+
+    document.getElementById('start').disabled = false;
 }
 
-// Start the time record
+// Start the time
 function timeStart() {
-    var secondsLabel = document.getElementById("seconds");
+    seconds++;
 
-    if (!timer) {
-        timer = setInterval(setTime, 1000);
+    if (seconds / 60 == 1) {
+        seconds = 0;
+        minutes++;
     }
 
-    function setTime() {
-        totalSeconds++;
-        secondsLabel.innerHTML = totalSeconds;
+    if (seconds < 10) displaySeconds = '0' + seconds;
+    else displaySeconds = seconds;
+
+    if (minutes < 10) displayMinutes = '0' + minutes;
+    else displayMinutes = minutes;
+
+    // display time
+    document.getElementById('stop-watch').innerHTML = displayMinutes + ':' + displaySeconds;
+}
+
+function timePause() {
+    if (statusClock == 'stopped') {
+        interval = window.setInterval(timeStart, 1000);
+        statusClock = 'started';
+        document.getElementById('pause').src = './img/pause.svg';
+    } else {
+        window.clearInterval(interval);
+        statusClock = 'stopped';
+        document.getElementById('pause').src = './img/play.svg';
     }
+}
+
+function timeReset() {
+    window.clearInterval(interval);
+    seconds = 0;
+    minutes = 0;
+    document.getElementById('stop-watch').innerHTML = '00:00';
 }
 
 function start() {
-    timeStart();
+    // Set time to default
+    timeReset();
+    interval = window.setInterval(timeStart, 1000);
+    statusClock = 'started';
+    document.getElementById('pause').src = './img/pause.svg';
+
+    // clear hint
+    document.getElementById('intro').innerHTML = 'Hãy thử chọn "Gợi ý" nếu như bạn chưa thể tìm ra đáp án';
+    document.getElementById('hint-elements').innerHTML = '';
+
+    // clear color
     clearColor();
+
     matrix = getCurrentSudoku();
 
     for (var i = 0; i < 81; i++) {
-        var cell = document.getElementById("cell-" + i);
-        if (cell.value != "") {
+        var cell = document.getElementById('cell-' + i);
+        if (cell.value != '') {
             cell.disabled = true;
-            cell.style.color = "black";
+            cell.style.color = 'black';
         } else {
             cell.disabled = false;
-            cell.style.color = "#BDBDBD";
+            cell.style.color = '#BDBDBD';
         }
     }
-}
-
-// Stop game
-function stop() {
-    clearInterval(timer);
-    document.getElementById("hint-elements").innerHTML = "";
 }
 
 function getCoordinateById(id) {
     var cell = 0;
     for (var i = 0; i < 9; i++) {
         for (var j = 0; j < 9; j++) {
-            var idCell = "cell-" + cell;
+            var idCell = 'cell-' + cell;
             if (idCell === id) {
                 return [i, j];
             }
@@ -497,12 +529,12 @@ function nextMatrixesByCoordinate(matrix, id) {
 
 
 function hint(id) {
-    if (id != "") {
+    if (id != '') {
         var current = getCurrentSudoku();
         const possibilites = nextMatrixesByCoordinate(current, id);
         const validMatrixes = keepOnlyValid(possibilites);
-
         var res = [];
+
         validMatrixes.forEach(function (item) {
             current = getCurrentSudoku();
             for (var i = 0; i < 9; i++) {
@@ -512,31 +544,14 @@ function hint(id) {
             }
         })
 
-        document.getElementById("hint-elements").innerHTML = "";
+        document.getElementById('intro').innerHTML = 'Hãy thử điền một trong nhũng số dưới đây';
+        document.getElementById('hint-elements').innerHTML = '';
         res.forEach(function(item) {
-            document.getElementById("hint-elements").innerHTML += item + " ";
+            document.getElementById('hint-elements').innerHTML += item;
         })
-
-        totalSeconds += 10;
     } else {
-        window.alert("Vui lòng chọn 1 ô !?!");
+        window.alert('Vui lòng chọn 1 ô !?!');
     }
-}
-
-function converIDCell(id) {
-    return parseInt(id.slice(5));
-}
-
-function getRowStart(id) {
-    for (var i = 0; i <= 9; i++) {
-        if (id < (9 * i)) {
-            return 9 * (i - 1);
-        }
-    }
-}
-
-function getColStart(id) {
-    return id - getRowStart(id);
 }
 
 function clearColor() {
@@ -553,45 +568,56 @@ function clearColor() {
     }
 }
 
-function changeColor(id) {
-    var convertedID = converIDCell(id);
-    var rowStart = getRowStart(convertedID);
-    var colStart = getColStart(convertedID);
+function getNumericID(id) {
+    return parseInt(id.slice(5));
+}
 
-    // get coordinate by ID cell
-    var rowCoordinate = convertedID % 9;
-    var colCoordinate = parseInt(convertedID / 9);
-    var postionRowCoordinate = 0;
-
-    // get start position of board child: row
-    if (rowCoordinate >= 0 && rowCoordinate <= 2) postionRowCoordinate = 0;
-    else if (rowCoordinate >= 3 && rowCoordinate <= 5) postionRowCoordinate = 3;
-    else if (rowCoordinate >= 6 && rowCoordinate <= 8) postionRowCoordinate = 6;
-
-    // convert coordinate: [row, col] to ID
-
-    // var startPostionCell = (postionRowCoordinate * 9) + (colCoordinate - rowCoordinate);
-    // console.log((colCoordinate - rowCoordinate));
-
+function changeColor(id) { // id: 'cell-'
+    // clear all color
     clearColor();
 
-    document.getElementById('cell-' + convertedID).classList.add('selected-cell');
 
+
+    var cellID = getNumericID(id); // get only numeric cell id
+
+    // get coordinate by ID cell
+    var rowCoordinate = parseInt(cellID / 9);
+    var colCoordinate = cellID % 9;
+    var x = 0;
+    var y= 0;
+
+    // get start position of board child: row
+    if (rowCoordinate >= 0 && rowCoordinate <= 2) x = 0;
+    else if (rowCoordinate >= 3 && rowCoordinate <= 5) x = 3;
+    else if (rowCoordinate >= 6 && rowCoordinate <= 8) x = 6;
+
+    // get start position of board child: column
+    if (colCoordinate >= 0 && colCoordinate <= 2) y = 0;
+    else if (colCoordinate >= 3 && colCoordinate <= 5) y = 3;
+    else if (colCoordinate >= 6 && colCoordinate <= 8) y = 6;
+
+    // convert coordinate: [row, col] to ID
+    var cellStartChild = (x * 9) + y;
+
+    document.getElementById('cell-' + cellID).classList.add('selected-cell');
+
+    // change color row and column
     for (var i = 0; i < 9; i++) {
-        if ((rowStart + i) != convertedID) {
-            document.getElementById('cell-' + (rowStart + i)).classList.add('relative-cell');
+        if (((rowCoordinate * 9) + i) != cellID) {
+            document.getElementById('cell-' + ((rowCoordinate * 9) + i)).classList.add('relative-cell');
         }
 
-        if ((colStart + (9 * i)) != convertedID) {
-            document.getElementById('cell-' + (colStart + (9 * i))).classList.add('relative-cell');
+        if ((colCoordinate + (9 * i)) != cellID) {
+            document.getElementById('cell-' + (colCoordinate + (9 * i))).classList.add('relative-cell');
         }
     }
 
-    // for (var i = 0; i <= 18; i += 9) {
-    //     for (var j = 0; j < 3; j++) {
-    //         if ((rowStart + i + j) != convertedID) {
-    //             document.getElementById('cell-' + (rowStart + i + j)).classList.add('relative-cell');
-    //         }
-    //     }
-    // }
+    // change color 9x9
+    for (var i = 0; i <= 18; i += 9) {
+        for (var j = 0; j < 3; j++) {
+            if ((cellStartChild + i + j) != cellID) {
+                document.getElementById('cell-' + (cellStartChild + i + j)).classList.add('relative-cell');
+            }
+        }
+    }
 }

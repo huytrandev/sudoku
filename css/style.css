@@ -7,10 +7,10 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
+    height: 100vh;
+    position: relative;
     /*background-color:#FAFAFA;*/
 }
-
-
 
 table,tr,td {
     margin:0;
@@ -63,10 +63,43 @@ ul {
     list-style: inside disc;
 }
 
+nav {
+    display: flex;
+    padding: 0 !important;
+    justify-content: space-between !important;
+}
+
+nav .logo {
+    letter-spacing: 2px;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+nav .logo span {
+    color: #e53935;
+}
+
+nav ul a {
+    color: black;
+    padding: 10px 0;
+    transition: .5s linear;
+}
+
+nav ul a:hover {
+    transform: scale(1.2) !important;
+    text-decoration: none;
+    color: black;
+    border-bottom: 1px solid black !important;
+}
+
 .row {
     display: flex;
     justify-content: space-around;
     align-items: center;
+}
+
+.row #time {
+    margin: 0;
 }
 
 .btn {
@@ -93,6 +126,33 @@ ul {
     background-color: #E1F5FE !important;
 }
 
+.modal-header h5 {
+    font-size: 24px;
+}
+
+.modal-body h5 {
+    width: fit-content;
+    padding-bottom: 5px;
+    font-size: 22px;
+    border-bottom: 1px solid #BDBDBD;
+}
+
+.footer {
+    margin-top: 30px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    posion: absolute !important;
+    top: 100vh !important;
+}
+
+.footer .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
 #actions-wrap {
     text-align: center;
 }
@@ -107,9 +167,22 @@ ul {
 }
 
 #time {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    font-size: 20px;
+}
+
+#time img {
+    cursor: pointer;
+    margin-left: 5px;
+    height: 22px;
+    transition: .5s;
+}
+
+#time img:hover {
+    transform: scale(1.2);
 }
 
 #hint-zone {
@@ -134,6 +207,23 @@ ul {
     color: #000;
 }
 
+#hint-zone {
+    margin: 10px auto;
+}
+
+#intro {
+    font-weight: 600;
+}
+
+#hint-elements {
+    display: block;
+    font-size: 26px;
+    margin: 0 17px;
+    color: #ef5350;
+    font-weight: 600;
+    letter-spacing: 25px;
+
+}
 
 #cell-0, #cell-1, #cell-2,
 #cell-3, #cell-4, #cell-5,
@@ -175,3 +265,18 @@ ul {
     border-right: 2px solid #212121;
 }
 
+@media screen and (max-width:768px) {
+    nav {
+        padding-left: 35px !important;
+        padding-right: 35px !important;
+    }
+
+    .footer .container {
+        display: block;
+    }
+
+    .footer span {
+        width: 100vw;
+        display: block;
+    }
+}
