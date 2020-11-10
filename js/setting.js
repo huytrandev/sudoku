@@ -25,25 +25,59 @@ window.onload = function () {
         download();
     }, false);
 
-    document.getElementById('start').addEventListener('click', function () {
-        start();
-        document.getElementById('start').disabled = true;
-        document.getElementById('pause').disabled = false;
-        document.getElementById('clear').disabled = false;
-    }, false);
+    // document.getElementById('start').addEventListener('click', function () {
+    //     start();
+    //     document.getElementById('start').disabled = true;
+    //     document.getElementById('pause').disabled = false;
+    //     document.getElementById('clear').disabled = false;
+    // }, false);
+
+    var sudoku = '';
+    var element = [];
 
     document.getElementById('pause').addEventListener('click', function () {
-        timePause();
-        // document.getElementById('solve').disabled = true;
-        // document.getElementById('reload').disabled = true;
-        // for (var i = 0; i < 81; i++) {
-        //     document.getElementById('cell-' + i).disabled = true;
-        // }
+        var statusClock = timePause();
+        var allCell = document.querySelectorAll('.board-game td input');
+        
+        if (statusClock == 'stopped') {
+            clearColor('duplicated-cell');
+            
+            sudoku = getCurrentSudoku().toString().replace(/,/g,'');
+            element = storeDisabledElement();
+            
+            allCell.forEach(function(cell) {
+                if (!cell.disabled) {
+                    cell.disabled = true;
+                }
+
+                cell.classList.add('disabled-cell');
+                cell.value = '';
+            })
+        } else {
+            var i = 0;
+
+            allCell.forEach(function(cell) {
+                cell.classList.remove('disabled-cell');
+
+                if (sudoku[i] != 0) {
+                    cell.value = sudoku[i];
+                } else {
+                    cell.value = '';
+                }
+
+                i++;
+            });
+
+            for (var i = 0; i < element[1].length; i++) {
+                document.getElementById('cell-' + element[1][i]).disabled = false;
+            }
+        }
+
     }, false);
 
     document.getElementById('solve').addEventListener('click', function () {
         fillAllSudoku();
-        document.getElementById('intro').innerHTML = 'Bạn sẽ cảm thấy thích thú hơn nếu tự mình giải trò chơi đấy';
+        document.getElementById('intro').innerHTML = "Why don't you solve the game by yourself. Let's play again";
     }, false);
 
     document.getElementById('check').addEventListener('click', function () {
@@ -73,13 +107,13 @@ window.onload = function () {
             changeColor(idCell);
         });
 
-        document.getElementById('cell-' + i).addEventListener('change', function () {
+        document.getElementById('cell-' + i).addEventListener('keyup', function () {
             var current = getCurrentSudoku();
             var time = document.getElementById('stop-watch').textContent;
-            // check();
+            check();
             if (isSolved(current) && validMatrix(current)) {
                 timePause();
-                document.getElementById('intro').innerHTML = 'Bạn đã hoàn thành trò chơi trong ' + time;
+                document.getElementById('intro').innerHTML = "Congratulation! You finish it in " + time;
                 for (var i = 0; i < 81; i++) {
                     document.getElementById('cell-' + i).disabled = true;
                 }

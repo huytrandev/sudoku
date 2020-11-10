@@ -83,10 +83,13 @@ function generate() {
     document.getElementById('pause').src = './img/pause.svg';
 
     //clear color
-    clearColor();
+    clearColor('relative-cell');
+    clearColor('selected-cell');
+    clearColor('duplicated-cell');
+    clearColor('disabled-cell');
 
     // clear hint
-    document.getElementById('intro').innerHTML = 'Hãy thử chọn "Gợi ý" nếu như bạn chưa thể tìm ra đáp án';
+    document.getElementById('intro').innerHTML = "Let's try "+"Hint"+" if you can not find any answers";
     document.getElementById('hint-elements').innerHTML = '';
 }
 
@@ -108,8 +111,8 @@ function solve(matrix) {
         return matrix;
     } else {
         const possibilites = nextMatrixes(matrix);
-        const validMatrixes = keepOnlyValid(possibilites);
-        return searchForSolution(validMatrixes);
+        const isValidMatrixes = keepOnlyValid(possibilites);
+        return searchForSolution(isValidMatrixes);
     }
 }
 
@@ -156,17 +159,14 @@ function findEmptyCell(matrix) {
 
 // Filter valid matrix
 function keepOnlyValid(matrixes) {
-    return matrixes.filter(m => validMatrix(m));
+    return matrixes.filter(m => isValidMatrix(m));
 }
 
-function validMatrix(matrix) {
-    var vRows = validRows(matrix);
-    var vCols = validCols(matrix);
-    var vChild = validChildMatrix(matrix);
-    return (vRows && vCols && vChild);
+function isValidMatrix(matrix) {
+    return (isValidRows(matrix) && isValidCols(matrix) && isValidChildMatrix(matrix));
 }
 
-function validRows(matrix) {
+function isValidRows(matrix) {
     for (var i = 0; i < 9; i++) {
         var current = [];
         for (var j = 0; j < 9; j++) {
@@ -177,11 +177,10 @@ function validRows(matrix) {
             }
         }
     }
-
     return true;
 }
 
-function validCols(matrix) {
+function isValidCols(matrix) {
     for (var i = 0; i < 9; i++) {
         var current = [];
         for (var j = 0; j < 9; j++) {
@@ -195,13 +194,12 @@ function validCols(matrix) {
     return true;
 }
 
-function validChildMatrix(matrix) {
+function isValidChildMatrix(matrix) {
     const childMatrixCoordinates = [
         [0, 0], [0, 1], [0, 2],
         [1, 0], [1, 1], [1, 2],
         [2, 0], [2, 1], [2, 2]
     ];
-    var child = 0;
 
     for (var y = 0; y < 9; y += 3) {
         for (var x = 0; x < 9; x += 3) {
@@ -251,7 +249,7 @@ function fillAllSudoku() {
     debugger;
     var current = getCurrentSudoku();
     var cell = 0;
-    if (validMatrix(current)) {
+    if (isValidMatrix(current)) {
         var currentSolved = solve(current);
         if (currentSolved != false) {
             for (var i = 0; i < 9; i++) {
@@ -281,7 +279,7 @@ function fillAllSudoku() {
 
             document.getElementById('pause').src = './img/play.svg';
         } else {
-            alert('Không thể giải bảng Sudoku với giá trị mà bạn đã điền vào, hãy thử với những giá trị khác!!!');
+            alert("Can't not solve Sudoku with values which you fill in!!!");
         }
     } else {
         var currentSolved = solve(matrix);
@@ -334,22 +332,12 @@ function isBlankSudoku(matrix) {
 function check() {
     var current = getCurrentSudoku();
 
-    if (isBlankSudoku(current)) alert('Bảng Sudoku đang trống');
-    else if (validMatrix(current)) {
-        alert('Tốt!!!');
+    // if (isBlankSudoku(current)) alert("The Sudoku is blank");
+
+    if (isValidMatrix(current)) {
+        //
     } else {
-        // for (var i = 0; i < 9; i++) {
-        //     for (var j = 0; j < 9; j++) {
-        //         if (matrix[i][j] == current[i][j]) {
-
-        //         }
-        //     }
-        // }
-        console.log(rowDiff);
-        console.log(colDiff);
-        console.log(childMatrixDiff);
-
-        window.alert('Hình như không đúng, hãy thử kiểm tra lại');
+        changeColorDuplicated(current);
     }
 }
 
@@ -420,15 +408,33 @@ function clear() {
         document.getElementById('cell-' + i).style.color = 'black';
     }
 
-    clearColor();
+    clearColor('relative-cell');
+    clearColor('selected-cell');
+
     timeReset();
 
     // change time icon
     document.getElementById('pause').src = './img/play.svg';
-    document.getElementById('intro').innerHTML = 'Hãy thử chọn "Gợi ý" nếu như bạn chưa thể tìm ra đáp án';
+    document.getElementById('intro').innerHTML = "Let's try "+"Hint"+" if you can not find any answers";
     document.getElementById('hint-elements').innerHTML = '';
 
     document.getElementById('start').disabled = false;
+}
+
+function storeDisabledElement() {
+    var allCell = document.querySelectorAll('.board-game td input');
+    var disabledCell = [];
+    var enabledCell = [];
+
+    for (var i = 0; i < allCell.length; i++) {
+        if (allCell[i].disabled) {
+            disabledCell.push(i);
+        } else {
+            enabledCell.push(i);
+        }
+    };
+
+    return [disabledCell, enabledCell];
 }
 
 // Start the time
@@ -460,6 +466,8 @@ function timePause() {
         statusClock = 'stopped';
         document.getElementById('pause').src = './img/play.svg';
     }
+
+    return statusClock;
 }
 
 function timeReset() {
@@ -477,11 +485,12 @@ function start() {
     document.getElementById('pause').src = './img/pause.svg';
 
     // clear hint
-    document.getElementById('intro').innerHTML = 'Hãy thử chọn "Gợi ý" nếu như bạn chưa thể tìm ra đáp án';
+    document.getElementById('intro').innerHTML = "Let's try "+"Hint"+" if you can not find any answers";
     document.getElementById('hint-elements').innerHTML = '';
 
     // clear color
-    clearColor();
+    clearColor('relative-cell');
+    clearColor('selected-cell');
 
     matrix = getCurrentSudoku();
 
@@ -532,10 +541,10 @@ function hint(id) {
     if (id != '') {
         var current = getCurrentSudoku();
         const possibilites = nextMatrixesByCoordinate(current, id);
-        const validMatrixes = keepOnlyValid(possibilites);
+        const isValidMatrixes = keepOnlyValid(possibilites);
         var res = [];
 
-        validMatrixes.forEach(function (item) {
+        isValidMatrixes.forEach(function (item) {
             current = getCurrentSudoku();
             for (var i = 0; i < 9; i++) {
                 for (var j = 0; j < 9; j++) {
@@ -544,7 +553,7 @@ function hint(id) {
             }
         })
 
-        document.getElementById('intro').innerHTML = 'Hãy thử điền một trong nhũng số dưới đây';
+        document.getElementById('intro').innerHTML = 'Hints is below';
         document.getElementById('hint-elements').innerHTML = '';
         res.forEach(function(item) {
             document.getElementById('hint-elements').innerHTML += item;
@@ -554,16 +563,12 @@ function hint(id) {
     }
 }
 
-function clearColor() {
+function clearColor(className) {
     var allCell = document.querySelectorAll('.board-game td input');
 
     for (var i = 0; i < allCell.length; i++) {
-        if (allCell[i].classList.contains('relative-cell')) {
-            allCell[i].classList.remove('relative-cell');
-        }
-
-        if (allCell[i].classList.contains('selected-cell')) {
-            allCell[i].classList.remove('selected-cell');
+        if (allCell[i].classList.contains(className)) {
+            allCell[i].classList.remove(className);
         }
     }
 }
@@ -574,9 +579,8 @@ function getNumericID(id) {
 
 function changeColor(id) { // id: 'cell-'
     // clear all color
-    clearColor();
-
-
+    clearColor('relative-cell');
+    clearColor('selected-cell');
 
     var cellID = getNumericID(id); // get only numeric cell id
 
@@ -620,4 +624,153 @@ function changeColor(id) { // id: 'cell-'
             }
         }
     }
+}
+
+function changeColorDuplicated(matrix) {
+    var row = duplicatedOnRow(matrix);
+    var col = duplicatedOnCol(matrix);
+    var child = duplicatedChild(matrix);
+    
+    debugger;
+
+    // on child
+    if (child != undefined && child.length != 0) {
+        for (var i = 0; i < child.length; i++) {
+            var cellStartChild = (child[i][0][0] * 9) + child[i][0][1];
+
+            for (var x = 0; x <= 18; x += 9) {
+                for (var y = 0; y < 3; y++) {
+                    var element = document.getElementById('cell-' + (cellStartChild + x + y));
+
+                    if (element.classList.contains('duplicated-cell')) {
+                        if (!child[i][1].includes(parseInt(element.value))) {
+                            element.classList.remove('duplicated-cell');
+                        }
+                    } else if (child[i][1].includes(parseInt(element.value))) {
+                        element.classList.add('duplicated-cell');
+                    }
+                }
+            }
+        }
+    }
+
+    // on row
+    if (row != undefined && row.length != 0) {
+        for (var i = 0; i < row.length; i++) {
+            for (var j = 0; j < 9; j++) {
+                var element = document.getElementById('cell-' + ((row[i][0] * 9) + j));
+
+                if (element.classList.contains('duplicated-cell')) {
+                    if (!row[i][1].includes(parseInt(element.value))) {
+                        element.classList.remove('duplicated-cell');
+                    }
+                } else if (row[i][1].includes(parseInt(element.value))) {
+                    element.classList.add('duplicated-cell');
+                }
+            }
+        }
+    }
+
+    // on col
+    if (col != undefined && col.length != 0) {
+        for (var i = 0; i < col.length; i++) {
+            for (var j = 0; j < 9; j++) {
+                var element = document.getElementById('cell-' + (col[i][0] + (9 * j)));
+
+                if (element.classList.contains('duplicated-cell')) {
+                    if (!col[i][1].includes(parseInt(element.value))) {
+                        element.classList.remove('duplicated-cell');
+                    }
+                } else if (col[i][1].includes(parseInt(element.value))) {
+                    element.classList.add('duplicated-cell');
+                }
+            }
+        }
+    }
+
+    
+}
+
+function getDuplicatedValue(array) {
+    var current = [];
+    var duplicated = [];
+    for (var i = 0; i < array.length; i++) {
+        if (current.includes(array[i])) {
+            duplicated.push(array[i]);
+        } else if (array[i] != 0) {
+            current.push(array[i]);
+        }
+    }
+
+    return duplicated;
+}
+
+function backTrackingArray(array) {
+    var current = [];
+    for (var i = 0; i < array.length; i++) {
+        if (current.includes(array[i])) {
+            return false;
+        } else if (array[i] != 0) {
+            current.push(array[i]);
+        }
+    }
+    return true;
+}
+
+function duplicatedOnRow(matrix) {
+    var duplicated = [];
+    for (var i = 0; i < matrix.length; i++) {
+        if (!backTrackingArray(matrix[i])) {
+            duplicated.push([i, getDuplicatedValue(matrix[i])]);
+        }
+    }
+    return duplicated;
+}
+
+function duplicatedOnCol(matrix) {
+    var duplicated = [];
+    
+    for (var i = 0; i < matrix.length; i++) {
+        var col = [];
+
+        for (var j = 0; j < matrix.length; j++) {
+            col.push(matrix[j][i]);
+        }
+
+        if (!backTrackingArray(col)) {
+            duplicated.push([i, getDuplicatedValue(col)])
+        }
+    }
+    
+    return duplicated;
+}
+
+function duplicatedChild(matrix) {
+    var duplicated = [];
+
+    const childMatrixCoordinates = [
+        [0, 0], [0, 1], [0, 2],
+        [1, 0], [1, 1], [1, 2],
+        [2, 0], [2, 1], [2, 2]
+    ];
+
+    for (var y = 0; y < 9; y += 3) {
+        for (var x = 0; x < 9; x += 3) {
+            var child = [];
+
+            for (var i = 0; i < 9; i++) {
+                var coordinates = childMatrixCoordinates[i].slice();
+                coordinates[0] += y;
+                coordinates[1] += x;
+
+                child.push(matrix[coordinates[0]][coordinates[1]]);
+            }
+
+            if (!backTrackingArray(child)) {
+                duplicated.push([[y, x], getDuplicatedValue(child)]);
+            }
+        }
+    }
+
+    return duplicated;
 }

@@ -32,7 +32,7 @@ h1 {
 }
 
 input[type=text] {
-    caret-color: transparent;
+    caret-color: #9E9E9E;
     color: black;
     padding: 0;
     border: 0;
@@ -118,12 +118,32 @@ nav ul a:hover {
     margin: 0 10px;
 }
 
+.default-cell {
+    color: #212121 !important;
+}
+
+.input-cell {
+    color: #9E9E9E !important;
+}
+
+.resolved-cell {
+    color: #1565C0 !important;
+}
+
 .selected-cell {
     background-color: #BBDEFB !important;
 }
 
 .relative-cell {
     background-color: #E1F5FE !important;
+}
+
+.disabled-cell {
+    background-color: #E0E0E0 !important;
+}
+
+.duplicated-cell {
+    background-color: #ffcdd2 !important;
 }
 
 .modal-header h5 {
@@ -143,7 +163,7 @@ nav ul a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    posion: absolute !important;
+    position: absolute !important;
     top: 100vh !important;
 }
 
