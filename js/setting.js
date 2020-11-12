@@ -13,10 +13,8 @@ window.onload = function () {
         generate();
         document.getElementById('hint').disabled = false;
         document.getElementById('solve').disabled = false;
-        document.getElementById('pause').disabled = false;
+        document.getElementById('pause').disabled = true;
         document.getElementById('reload').disabled = false;
-        document.getElementById('start').disabled = false;
-        document.getElementById('start').disabled = true;
         document.getElementById('clear').disabled = false;
 
     }, false);
@@ -24,13 +22,6 @@ window.onload = function () {
     document.getElementById('download').addEventListener('click', function () {
         download();
     }, false);
-
-    // document.getElementById('start').addEventListener('click', function () {
-    //     start();
-    //     document.getElementById('start').disabled = true;
-    //     document.getElementById('pause').disabled = false;
-    //     document.getElementById('clear').disabled = false;
-    // }, false);
 
     var sudoku = '';
     var element = [];
@@ -72,16 +63,11 @@ window.onload = function () {
                 document.getElementById('cell-' + element[1][i]).disabled = false;
             }
         }
-
     }, false);
 
     document.getElementById('solve').addEventListener('click', function () {
         fillAllSudoku();
         document.getElementById('intro').innerHTML = "Why don't you solve the game by yourself. Let's play again";
-    }, false);
-
-    document.getElementById('check').addEventListener('click', function () {
-        check();
     }, false);
 
     document.getElementById('reload').addEventListener('click', function () {
@@ -94,7 +80,6 @@ window.onload = function () {
         document.getElementById('solve').disabled = false;
         document.getElementById('pause').disabled = false;
         document.getElementById('reload').disabled = false;
-        document.getElementById('start').disabled = false;
     }, false);
 
     document.getElementById('hint').addEventListener('click', function () {
