@@ -274,7 +274,6 @@ function fillAllSudoku() {
             document.getElementById('solve').disabled = true;
             document.getElementById('pause').disabled = true;
             document.getElementById('reload').disabled = true;
-            document.getElementById('start').disabled = true;
             document.getElementById('clear').disabled = false;
 
             document.getElementById('pause').src = './img/play.svg';
@@ -303,7 +302,6 @@ function fillAllSudoku() {
             document.getElementById('solve').disabled = true;
             document.getElementById('pause').disabled = true;
             document.getElementById('reload').disabled = true;
-            document.getElementById('start').disabled = true;
             document.getElementById('clear').disabled = false;
 
             document.getElementById('pause').src = './img/play.svg';
@@ -410,6 +408,8 @@ function clear() {
 
     clearColor('relative-cell');
     clearColor('selected-cell');
+    clearColor('duplicated-cell');
+    clearColor('disabled-cell');
 
     timeReset();
 
@@ -417,8 +417,6 @@ function clear() {
     document.getElementById('pause').src = './img/play.svg';
     document.getElementById('intro').innerHTML = "Let's try "+"Hint"+" if you can not find any answers";
     document.getElementById('hint-elements').innerHTML = '';
-
-    document.getElementById('start').disabled = false;
 }
 
 function storeDisabledElement() {
