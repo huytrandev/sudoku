@@ -10,6 +10,8 @@ var interval = null;
 //Define var to hold stopwatch status
 var statusClock = 'stopped';
 
+var countCheck = 0;
+
 
 const defaultMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -329,6 +331,8 @@ function isBlankSudoku(matrix) {
 
 function check() {
     var current = getCurrentSudoku();
+    seconds += 10;
+    countCheck++;
 
     // if (isBlankSudoku(current)) alert("The Sudoku is blank");
 
@@ -628,8 +632,6 @@ function changeColorDuplicated(matrix) {
     var row = duplicatedOnRow(matrix);
     var col = duplicatedOnCol(matrix);
     var child = duplicatedChild(matrix);
-    
-    debugger;
 
     // on child
     if (child != undefined && child.length != 0) {
@@ -771,4 +773,8 @@ function duplicatedChild(matrix) {
     }
 
     return duplicated;
+}
+
+function getCountCheck() {
+    return countCheck;
 }

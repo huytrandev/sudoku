@@ -29,14 +29,14 @@ window.onload = function () {
     document.getElementById('pause').addEventListener('click', function () {
         var statusClock = timePause();
         var allCell = document.querySelectorAll('.board-game td input');
-        
+
         if (statusClock == 'stopped') {
             clearColor('duplicated-cell');
-            
-            sudoku = getCurrentSudoku().toString().replace(/,/g,'');
+
+            sudoku = getCurrentSudoku().toString().replace(/,/g, '');
             element = storeDisabledElement();
-            
-            allCell.forEach(function(cell) {
+
+            allCell.forEach(function (cell) {
                 if (!cell.disabled) {
                     cell.disabled = true;
                 }
@@ -47,7 +47,7 @@ window.onload = function () {
         } else {
             var i = 0;
 
-            allCell.forEach(function(cell) {
+            allCell.forEach(function (cell) {
                 cell.classList.remove('disabled-cell');
 
                 if (sudoku[i] != 0) {
@@ -86,6 +86,10 @@ window.onload = function () {
         hint(idCell);
     }, false);
 
+    document.getElementById('check').addEventListener('click', function () {
+        check();
+    });
+
     for (var i = 0; i < 81; i++) {
         document.getElementById('cell-' + i).addEventListener('click', function () {
             idCell = this.id;
@@ -95,10 +99,18 @@ window.onload = function () {
         document.getElementById('cell-' + i).addEventListener('keyup', function () {
             var current = getCurrentSudoku();
             var time = document.getElementById('stop-watch').textContent;
-            check();
+
+            clearColor('duplicated-cell');
             if (isSolved(current) && validMatrix(current)) {
                 timePause();
-                document.getElementById('intro').innerHTML = "Congratulation! You finish it in " + time;
+
+                if (getCountCheck() > 0) {
+                    document.getElementById('intro').innerHTML = "Congratulation! You finish it in " + time + " and "
+                        + getCountCheck() + " times use 'Check'";
+                } else {
+                    document.getElementById('intro').innerHTML = "Congratulation! You finish it in " + time;
+                }
+
                 for (var i = 0; i < 81; i++) {
                     document.getElementById('cell-' + i).disabled = true;
                 }
