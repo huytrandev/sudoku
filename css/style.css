@@ -142,7 +142,15 @@ nav ul a:hover {
     background-color: #E0E0E0 !important;
 }
 
-.duplicated-cell {
+.duplicated-row {
+    background-color: #ffcdd2 !important;
+}
+
+.duplicated-col {
+    background-color: #ffcdd2 !important;
+}
+
+.duplicated-child {
     background-color: #ffcdd2 !important;
 }
 
