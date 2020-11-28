@@ -87,7 +87,9 @@ function generate() {
     //clear color
     clearColor('relative-cell');
     clearColor('selected-cell');
-    clearColor('duplicated-cell');
+    clearColor('duplicated-child');
+    clearColor('duplicated-row');
+    clearColor('duplicated-col');
     clearColor('disabled-cell');
 
     // clear hint
@@ -331,16 +333,13 @@ function isBlankSudoku(matrix) {
 
 function check() {
     var current = getCurrentSudoku();
-    seconds += 10;
     countCheck++;
 
     // if (isBlankSudoku(current)) alert("The Sudoku is blank");
-
-    if (isValidMatrix(current)) {
-        //
-    } else {
-        changeColorDuplicated(current);
-    }
+    changeColorDuplicated(current);
+    // if (!isValidMatrix(current)) {
+    //     changeColorDuplicated(current);
+    // }
 }
 
 // Reload the game board
@@ -398,6 +397,16 @@ function reload() {
             document.getElementById('cell-' + i).value = '';
         }
     }
+
+
+    // Set time to default
+    timeReset();
+    clearColor('duplicated-child');
+    clearColor('duplicated-row');
+    clearColor('duplicated-col');
+    interval = window.setInterval(timeStart, 1000);
+    statusClock = 'started';
+    document.getElementById('pause').src = './img/pause.svg';
 }
 
 function clear() {
@@ -412,7 +421,9 @@ function clear() {
 
     clearColor('relative-cell');
     clearColor('selected-cell');
-    clearColor('duplicated-cell');
+    clearColor('duplicated-child');
+    clearColor('duplicated-row');
+    clearColor('duplicated-col');
     clearColor('disabled-cell');
 
     timeReset();
@@ -633,6 +644,8 @@ function changeColorDuplicated(matrix) {
     var col = duplicatedOnCol(matrix);
     var child = duplicatedChild(matrix);
 
+    console.log(row);
+
     // on child
     if (child != undefined && child.length != 0) {
         for (var i = 0; i < child.length; i++) {
@@ -642,12 +655,12 @@ function changeColorDuplicated(matrix) {
                 for (var y = 0; y < 3; y++) {
                     var element = document.getElementById('cell-' + (cellStartChild + x + y));
 
-                    if (element.classList.contains('duplicated-cell')) {
+                    if (element.classList.contains('duplicated-child')) {
                         if (!child[i][1].includes(parseInt(element.value))) {
-                            element.classList.remove('duplicated-cell');
+                            element.classList.remove('duplicated-child');
                         }
                     } else if (child[i][1].includes(parseInt(element.value))) {
-                        element.classList.add('duplicated-cell');
+                        element.classList.add('duplicated-child');
                     }
                 }
             }
@@ -660,12 +673,22 @@ function changeColorDuplicated(matrix) {
             for (var j = 0; j < 9; j++) {
                 var element = document.getElementById('cell-' + ((row[i][0] * 9) + j));
 
-                if (element.classList.contains('duplicated-cell')) {
+                if (element.classList.contains('duplicated-row')) {
                     if (!row[i][1].includes(parseInt(element.value))) {
-                        element.classList.remove('duplicated-cell');
+                        element.classList.remove('duplicated-row');
                     }
                 } else if (row[i][1].includes(parseInt(element.value))) {
-                    element.classList.add('duplicated-cell');
+                    element.classList.add('duplicated-row');
+                }
+            }
+        }
+    } else {
+        for (var i = 0; i < 9; i++) {
+            for (var j = 0; j < 9; j++) {
+                var element = document.getElementById('cell-' + ((i * 9) + j));
+
+                if (element.classList.contains('duplicated-row')) {
+                        element.classList.remove('duplicated-row');
                 }
             }
         }
@@ -677,18 +700,20 @@ function changeColorDuplicated(matrix) {
             for (var j = 0; j < 9; j++) {
                 var element = document.getElementById('cell-' + (col[i][0] + (9 * j)));
 
-                if (element.classList.contains('duplicated-cell')) {
+                if (element.classList.contains('duplicated-col')) {
                     if (!col[i][1].includes(parseInt(element.value))) {
-                        element.classList.remove('duplicated-cell');
+                        element.classList.remove('duplicated-col');
                     }
                 } else if (col[i][1].includes(parseInt(element.value))) {
-                    element.classList.add('duplicated-cell');
+                    element.classList.add('duplicated-col');
                 }
             }
         }
+    } else {
+
     }
 
-    
+
 }
 
 function getDuplicatedValue(array) {
@@ -729,7 +754,7 @@ function duplicatedOnRow(matrix) {
 
 function duplicatedOnCol(matrix) {
     var duplicated = [];
-    
+
     for (var i = 0; i < matrix.length; i++) {
         var col = [];
 
@@ -741,7 +766,7 @@ function duplicatedOnCol(matrix) {
             duplicated.push([i, getDuplicatedValue(col)])
         }
     }
-    
+
     return duplicated;
 }
 

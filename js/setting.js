@@ -31,7 +31,9 @@ window.onload = function () {
         var allCell = document.querySelectorAll('.board-game td input');
 
         if (statusClock == 'stopped') {
-            clearColor('duplicated-cell');
+            clearColor('duplicated-child');
+            clearColor('duplicated-row');
+            clearColor('duplicated-col');
 
             sudoku = getCurrentSudoku().toString().replace(/,/g, '');
             element = storeDisabledElement();
@@ -67,6 +69,7 @@ window.onload = function () {
 
     document.getElementById('solve').addEventListener('click', function () {
         fillAllSudoku();
+        $('pause').click(function(){return false});
         document.getElementById('intro').innerHTML = "Why don't you solve the game by yourself. Let's play again";
     }, false);
 
@@ -96,11 +99,15 @@ window.onload = function () {
             changeColor(idCell);
         });
 
-        document.getElementById('cell-' + i).addEventListener('keyup', function () {
+        document.getElementById('cell-' + i).addEventListener('change', function () {
             var current = getCurrentSudoku();
             var time = document.getElementById('stop-watch').textContent;
 
-            clearColor('duplicated-cell');
+            clearColor('duplicated-child');
+            clearColor('duplicated-row');
+            clearColor('duplicated-col');
+
+            // check();
             if (isSolved(current) && validMatrix(current)) {
                 timePause();
 
