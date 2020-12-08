@@ -250,7 +250,6 @@ function getCurrentSudoku() {
 }
 
 function fillAllSudoku() {
-    debugger;
     var current = getCurrentSudoku();
     var cell = 0;
     if (isValidMatrix(current)) {
@@ -260,7 +259,7 @@ function fillAllSudoku() {
                 for (var j = 0; j < 9; j++) {
                     document.getElementById('cell-' + cell).value = currentSolved[i][j];
                     if (matrix[i][j] != current[i][j]) {
-                        document.getElementById('cell-' + cell).style.color = '#BDBDBD';
+                        document.getElementById('cell-' + cell).style.color = '#000';
                     }
 
                     if (currentSolved[i][j] != current[i][j]) {
@@ -407,6 +406,8 @@ function reload() {
     interval = window.setInterval(timeStart, 1000);
     statusClock = 'started';
     document.getElementById('pause').src = './img/pause.svg';
+    document.getElementById('intro').innerHTML = "Let's try "+"Hint"+" if you can not find any answers";
+    document.getElementById('hint-elements').innerHTML = "";
 }
 
 function clear() {
@@ -643,8 +644,6 @@ function changeColorDuplicated(matrix) {
     var row = duplicatedOnRow(matrix);
     var col = duplicatedOnCol(matrix);
     var child = duplicatedChild(matrix);
-
-    console.log(row);
 
     // on child
     if (child != undefined && child.length != 0) {
