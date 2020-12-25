@@ -163,7 +163,16 @@ function findEmptyCell(matrix) {
 
 // Filter valid matrix
 function keepOnlyValid(matrixes) {
-    return matrixes.filter(m => isValidMatrix(m));
+    // return matrixes.filter(m => isValidMatrix(m));
+    var res = [];
+
+    matrixes.forEach(m => {
+        if (isValidMatrix(m)) {
+            res.push(m);
+        }
+    });
+
+    return res;
 }
 
 function isValidMatrix(matrix) {
