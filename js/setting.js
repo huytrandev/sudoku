@@ -77,45 +77,6 @@ window.onload = function () {
     }, false);
 
     document.getElementById('reload').addEventListener('click', function () {
-        var statusClock = timePause();
-        var allCell = document.querySelectorAll('.board-game td input');
-
-        if (statusClock == 'stopped') {
-            clearColor('duplicated-child');
-            clearColor('duplicated-row');
-            clearColor('duplicated-col');
-
-            sudoku = getCurrentSudoku().toString().replace(/,/g, '');
-            element = storeDisabledElement();
-
-            allCell.forEach(function (cell) {
-                if (!cell.disabled) {
-                    cell.disabled = true;
-                }
-
-                cell.classList.add('disabled-cell');
-                cell.value = '';
-            })
-        } else {
-            var i = 0;
-
-            allCell.forEach(function (cell) {
-                cell.classList.remove('disabled-cell');
-
-                if (sudoku[i] != 0) {
-                    cell.value = sudoku[i];
-                } else {
-                    cell.value = '';
-                }
-
-                i++;
-            });
-
-            for (var i = 0; i < element[1].length; i++) {
-                document.getElementById('cell-' + element[1][i]).disabled = false;
-            }
-        }
-
         reload();
     }, false);
 
@@ -143,6 +104,7 @@ window.onload = function () {
         });
 
         document.getElementById('cell-' + i).addEventListener('change', function () {
+            debugger;
             var current = getCurrentSudoku();
             var time = document.getElementById('stop-watch').textContent;
 
@@ -151,7 +113,7 @@ window.onload = function () {
             clearColor('duplicated-col');
 
             // check();
-            if (isSolved(current) && validMatrix(current)) {
+            if (isSolved(current) && isValidMatrix(current)) {
                 timePause();
 
                 if (getCountCheck() > 0) {
