@@ -1,5 +1,5 @@
 function download() {
-    var filename = "sudoku.txt";
+    var filename = "Sudoku.txt";
     var element = document.createElement("a");
     var file = "";
 
